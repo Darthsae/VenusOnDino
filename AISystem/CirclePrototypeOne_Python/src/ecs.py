@@ -1,8 +1,8 @@
 from typing import TypeAlias, Any
 from ctypes import c_uint64
 
-entity: TypeAlias = c_uint64
-component: TypeAlias = c_uint64
+entity: TypeAlias = int
+component: TypeAlias = int
 
 class ECSCoordinator:
     def __init__(self):
@@ -27,7 +27,7 @@ class ECSCoordinator:
 
     def registerComponent(self) -> component:
         component_id: component = component(self.__next_component_id)
-        self.__components[component_id] = set()
+        self.__components[component_id] = {}
         while component(self.__next_component_id) in self.__components:
             self.__next_component_id += 1
         return component_id

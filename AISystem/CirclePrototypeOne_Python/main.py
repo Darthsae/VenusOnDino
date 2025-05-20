@@ -5,6 +5,7 @@ from src.world.terrain import Terrain
 from src.position import Point2D, Point3D
 from src.ecs import ECSCoordinator
 from src.systems.rendering import renderCircles, renderTerrain
+from src.systems.debug import randomMovement
 from src import constants
 
 MOVEMENT_AMOUNT: int = 1
@@ -57,6 +58,8 @@ def main():
             
             manager.process_events(event)
         
+        randomMovement(coordinator)
+
         positionLabel.set_text(f"{camera.x}, {camera.y}")
         
         manager.update(time_delta)

@@ -22,7 +22,11 @@ def renderCircles(coordinator: ECSCoordinator, surface: Surface, camera: Point3D
     for position, entity in entities:
         physicalBody: PhysicalBody = coordinator.getComponent(entity, constants.PHYSICAL_BODY_COMPONENT)
         new_position = (position.asPoint2D()  - camera) * constants.PIXELS_PER_METER
-        filled_circle(surface, int(new_position.x), int(new_position.y), int(physicalBody.size * constants.PIXELS_PER_METER), constants.species_types[coordinator.getComponent(entity, constants.SPECIES_COMPONENT)].color)
+        scaling_factor = physicalBody.size
+        if coordinator.hasComponent(entity, constants.SIZE_HEALTH_COMPONENT):
+            health = coordinator.getComponent(entity, constants.HEALTH_COMPONENT)
+            scaling_factor *= health.current / health.max
+        filled_circle(surface, int(new_position.x), int(new_position.y), int(scaling_factor * constants.PIXELS_PER_METER), constants.species_types[coordinator.getComponent(entity, constants.SPECIES_COMPONENT)].color)
 
 def renderTextures(coordinator: ECSCoordinator, surface: Surface, camera: Point3D, view_size: Point2D, terrain: Terrain):
     entities = terrain.entities.query((camera.scaleBy(1, 1, 0) - terrain.position), (camera.scaleBy(1, 1, 0) + Point3D(view_size.x // constants.PIXELS_PER_METER, view_size.y // constants.PIXELS_PER_METER, terrain.TERRAIN_SIZE * constants.METERS_PER_TILE) - terrain.position))
@@ -32,7 +36,10 @@ def renderTextures(coordinator: ECSCoordinator, surface: Surface, camera: Point3
         physicalBody: PhysicalBody = coordinator.getComponent(entity, constants.PHYSICAL_BODY_COMPONENT)
         texture_component: TexturedComponent = coordinator.getComponent(entity, constants.TEXTURED_COMPONENT)
         texture: TextureData = constants.textures[texture_component.texture_id]
-        scaling_factor: float = constants.PIXELS_PER_METER / max(texture.rect.width, texture.rect.height) * physicalBody.size
+        scaling_factor: float = constants.PIXELS_PER_METER / max(texture.rect.width, texture.rect.height) * physicalBody.size * 2
+        if coordinator.hasComponent(entity, constants.SIZE_HEALTH_COMPONENT):
+            health = coordinator.getComponent(entity, constants.HEALTH_COMPONENT)
+            scaling_factor *= health.current / health.max
         new_position = (position.asPoint2D()  - camera) * constants.PIXELS_PER_METER
         new_rect = Rect(int(new_position.x - texture.rect.width * scaling_factor * 0.5), int(new_position.y - texture.rect.height * scaling_factor * 0.5), texture.rect.width * scaling_factor, texture.rect.height * scaling_factor)
         surface.blit(pygame.transform.rotate(pygame.transform.scale_by(texture.texture, scaling_factor), physicalBody.rotation), new_rect) 

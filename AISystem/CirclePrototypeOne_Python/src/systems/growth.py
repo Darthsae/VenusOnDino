@@ -2,6 +2,7 @@ from ..ecs import ECSCoordinator
 from .. import constants
 from ..components.growth_component import GrowthComponent
 from ..components.physical_body import PhysicalBody
+from ..components.size_health_component import SizeHealthComponent
 
 def growth(coordinator: ECSCoordinator):
     for entity_id in coordinator.getEntitiesWithComponent(constants.GROWTH_COMPONENT):

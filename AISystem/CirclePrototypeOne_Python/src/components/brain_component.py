@@ -26,7 +26,17 @@ class TargetPosition:
         self.valid = False
 
 @dataclass
+class TargetCreature:
+    creature: entity
+    valid: bool = False
+
+    def setCreature(self, creature: entity):
+        self.creature = creature
+        self.valid = True
+
+@dataclass
 class BrainComponent:
     evaluators: list[EvaluatorInstance]
     entities: set[tuple[Point3D, entity]]
     target_position: TargetPosition
+    target_creature: TargetCreature

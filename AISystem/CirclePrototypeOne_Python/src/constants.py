@@ -2,8 +2,8 @@ from .world.tile import TileType, PhysicalState
 from .living_entity import Species
 from .ecs import ECSCoordinator, component
 from .ai.evaluator import IEvaluator, EvaluatorInstance
-from .ai.evaluators import TargetEvaluator
-from .components.diet_component import NutrientType
+from .ai.evaluators import TargetEvaluator, FoodEvaluator
+from .components.diet_component import NutrientType, NutrientStat
 from .texture_data import TextureData
 from pygame import Surface
 
@@ -16,14 +16,17 @@ tile_types: list[TileType] = [
 ]
 
 species_types: list[Species] = [
-    Species("Test", (0, 255, 255), 0, 1, 10, 50, 2, 10, 0, 0, {(NutrientType.PROTEIN, 2.5)}, {}, [
-        EvaluatorInstance(0, {})
+    Species("Test", (0, 255, 255), 0, 1, 10, 50, 2, 10, 0, 0, {NutrientType.PROTEIN: 2.5}, [
+        NutrientStat(NutrientType.FIBER, 0.1, 3.0, 0.005, 0.25)
+    ], 1, 0.1, False, [
+        EvaluatorInstance(1, {})
     ]),
-    Species("Shrub", (0, 255, 0), 1, 2, 2, 50, 0, 0, 5, 0.1, {(NutrientType.PROTEIN, 2.5)}, {}, [])
+    Species("Shrub", (0, 255, 0), -1, 2, 2, 600, 0, 0, 5, 0.001, {NutrientType.FIBER: 25.5}, [], -1, 0, True, [])
 ]
 
 evaluator_types: list[IEvaluator] = [
-    TargetEvaluator()
+    TargetEvaluator(),
+    FoodEvaluator()
 ]
 
 METERS_PER_TILE: int = 2
@@ -44,3 +47,5 @@ HEALTH_COMPONENT: component
 MOVE_TO_TARGET_COMPONENT: component
 GROWTH_COMPONENT: component
 NUTRIENT_SOURCE_COMPONENT: component
+EAT_TARGET_COMPONENT: component
+SIZE_HEALTH_COMPONENT: component

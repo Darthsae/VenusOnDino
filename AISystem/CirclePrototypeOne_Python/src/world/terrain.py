@@ -5,13 +5,14 @@ from ..ecs import ECSCoordinator, entity
 from ..components.physical_body import PhysicalBody
 from ..components.textured_component import TexturedComponent
 from ..components.health_component import HealthComponent
-from ..components.brain_component import BrainComponent, EvaluatorInstance, TargetPosition, PositionContext
+from ..components.brain_component import BrainComponent, EvaluatorInstance, TargetPosition, PositionContext, TargetCreature
 from ..components.diet_component import DietComponent
 from ..components.memory_component import MemoryComponent
 from ..components.sight_sensor import SightSensor
 from ..components.move_to_target_component import MoveToTargetComponent
 from ..components.nutrient_source import NutrientSource
 from ..components.growth_component import GrowthComponent
+from ..components.eat_target_component import EatTargetComponent
 from .. import constants
 import random
 
@@ -40,11 +41,13 @@ class Terrain:
         new_entity = coordinator.createEntity()
         coordinator.setComponent(new_entity, constants.POSITION_COMPONENT, position)
         coordinator.setComponent(new_entity, constants.SPECIES_COMPONENT, species)
-        coordinator.setComponent(new_entity, constants.BRAIN_COMPONENT, BrainComponent(constants.species_types[species].evaluators.copy(), set(), TargetPosition(Point3D(0, 0, 0), PositionContext.ROAM)))
+        coordinator.setComponent(new_entity, constants.BRAIN_COMPONENT, BrainComponent(constants.species_types[species].evaluators.copy(), set(), TargetPosition(Point3D(0, 0, 0), PositionContext.ROAM), TargetCreature(0)))
         if constants.species_types[species].texture > -1:
             coordinator.setComponent(new_entity, constants.TEXTURED_COMPONENT, TexturedComponent(constants.species_types[species].texture))
         coordinator.setComponent(new_entity, constants.PHYSICAL_BODY_COMPONENT, PhysicalBody(constants.species_types[species].mass, constants.species_types[species].size))
         coordinator.setComponent(new_entity, constants.HEALTH_COMPONENT, HealthComponent(constants.species_types[species].max_life, constants.species_types[species].max_life))
+        if constants.species_types[species].size_health:
+            coordinator.setComponent(new_entity, constants.SIZE_HEALTH_COMPONENT, True)
         if constants.species_types[species].sight > 0:
             coordinator.setComponent(new_entity, constants.SIGHT_COMPONENT, SightSensor(constants.species_types[species].sight))
         if constants.species_types[species].speed > 0:
@@ -55,5 +58,7 @@ class Terrain:
             coordinator.setComponent(new_entity, constants.NUTRIENT_SOURCE_COMPONENT, NutrientSource(constants.species_types[species].nutrients.copy()))
         if len(constants.species_types[species].diet) > 0:
             coordinator.setComponent(new_entity, constants.DIET_COMPONENT, DietComponent(constants.species_types[species].diet.copy()))
+        if constants.species_types[species].eats > -1:
+            coordinator.setComponent(new_entity, constants.EAT_TARGET_COMPONENT, EatTargetComponent(constants.species_types[species].eats, constants.species_types[species].eat_amount))
 
         return new_entity

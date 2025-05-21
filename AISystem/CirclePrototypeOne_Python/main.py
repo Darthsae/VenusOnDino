@@ -10,7 +10,7 @@ from src.systems.senses import senseSight
 from src.systems.memory import workingMemory, assosciativeMemory
 from src.systems.needs import updateNutrients
 from src.systems.evaluations import updateEvaluations
-from src.systems.behaviours import moveToTarget
+from src.systems.behaviours import moveToTarget, eatTarget
 from src.systems.growth import growth
 from src import constants
 from src.texture_data import TextureData
@@ -36,6 +36,8 @@ def main():
     constants.MOVE_TO_TARGET_COMPONENT = coordinator.registerComponent()
     constants.GROWTH_COMPONENT = coordinator.registerComponent()
     constants.NUTRIENT_SOURCE_COMPONENT = coordinator.registerComponent()
+    constants.EAT_TARGET_COMPONENT = coordinator.registerComponent()
+    constants.SIZE_HEALTH_COMPONENT = coordinator.registerComponent()
 
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
@@ -87,6 +89,7 @@ def main():
         assosciativeMemory(coordinator)
         updateEvaluations(coordinator, terrain)
         moveToTarget(coordinator, terrain)
+        eatTarget(coordinator)
 
         positionLabel.set_text(f"{camera.x}, {camera.y}")
         

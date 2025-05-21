@@ -19,5 +19,5 @@ def renderCircles(coordinator: ECSCoordinator, surface: Surface, camera: Point3D
     for position, entity in entities:
         physicalBody: PhysicalBody = coordinator.getComponent(entity, constants.PHYSICAL_BODY_COMPONENT)
         new_position = (position.asPoint2D()  - camera) * constants.PIXELS_PER_METER
-        filled_circle(surface, new_position.x, new_position.y, physicalBody.size * constants.PIXELS_PER_METER, constants.species_types[coordinator.getComponent(entity, constants.SPECIES_COMPONENT)].color)
+        filled_circle(surface, int(new_position.x), int(new_position.y), int(physicalBody.size * constants.PIXELS_PER_METER), constants.species_types[coordinator.getComponent(entity, constants.SPECIES_COMPONENT)].color)
         

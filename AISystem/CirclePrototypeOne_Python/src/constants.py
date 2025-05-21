@@ -1,6 +1,8 @@
 from .world.tile import TileType, PhysicalState
 from .living_entity import Species
 from .ecs import ECSCoordinator, component
+from .ai.evaluator import IEvaluator, EvaluatorInstance
+from .ai.evaluators import TargetEvaluator
 
 tile_types: list[TileType] = [
     TileType("Dirt", (168, 84, 0), PhysicalState.SOLID),
@@ -9,7 +11,13 @@ tile_types: list[TileType] = [
 ]
 
 species_types: list[Species] = [
-    Species("Test", (0, 255, 255), 1, 10)
+    Species("Test", (0, 255, 255), 1, 10, 50, 2, 10, [
+        EvaluatorInstance(0, {})
+    ])
+]
+
+evaluator_types: list[IEvaluator] = [
+    TargetEvaluator()
 ]
 
 METERS_PER_TILE: int = 2
@@ -25,3 +33,6 @@ BRAIN_COMPONENT: component
 SIGHT_COMPONENT: component
 WORKING_MEMORY_COMPONENT: component
 ASSOSCIATIVE_MEMORY_COMPONENT: component
+DIET_COMPONENT: component
+HEALTH_COMPONENT: component
+MOVE_TO_TARGET_COMPONENT: component

@@ -1,5 +1,5 @@
-from .evaluator import Evaluator
+from .evaluator import IEvaluator
 
 class Brain:
     def __init__(self):
-        self.evaluators: list[Evaluator] = []
+        self.evaluators: list[IEvaluator] = []

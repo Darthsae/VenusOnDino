@@ -1,4 +1,5 @@
-from .tile import TileColumn, ColumnLayerData
+from .tile import ColumnLayerData
+from .tile_column import TileColumn
 from ..octree import OctreeNode, Point3D
 from ..position import Point2D
 from ..ecs import ECSCoordinator, entity

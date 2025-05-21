@@ -19,7 +19,3 @@ class Species:
         self.eat_amount = eat_amount
         self.size_health = size_health
         self.evaluators = evaluators
-
-class LivingEntity:
-    def __init__(self):
-        ...

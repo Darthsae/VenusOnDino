@@ -1,11 +1,10 @@
 from .world.tile import TileType, PhysicalState
-from .living_entity import Species
-from .ecs import ECSCoordinator, component
+from .species import Species
+from .ecs import component
 from .ai.evaluator import IEvaluator, EvaluatorInstance
-from .ai.evaluators import TargetEvaluator, FoodEvaluator
+from .ai.evaluators import targetEvaluator, foodEvaluator
 from .components.diet_component import NutrientType, NutrientStat
 from .texture_data import TextureData
-from pygame import Surface
 
 textures: list[TextureData] = []
 
@@ -25,8 +24,8 @@ species_types: list[Species] = [
 ]
 
 evaluator_types: list[IEvaluator] = [
-    TargetEvaluator(),
-    FoodEvaluator()
+    targetEvaluator,
+    foodEvaluator
 ]
 
 METERS_PER_TILE: int = 2
@@ -49,3 +48,11 @@ GROWTH_COMPONENT: component
 NUTRIENT_SOURCE_COMPONENT: component
 EAT_TARGET_COMPONENT: component
 SIZE_HEALTH_COMPONENT: component
+
+DRAW_CIRCLES: bool = True
+DRAW_SPRITES: bool = True
+DRAW_TERRAIN: bool = True
+RUNNING: bool = True
+TAKE_STEP: bool = False
+
+FPS: int = 60

@@ -1,7 +1,17 @@
 from .position import Point3D
 
 class OctreeNode[T]:
-    MAX_OCCUPANTS: int = 8
+    MAX_OCCUPANTS: int = 32
+    MAPPED: list[Point3D] = [
+        Point3D(-1, -1, -1),
+        Point3D( 1, -1, -1),
+        Point3D(-1,  1, -1),
+        Point3D( 1,  1, -1),
+        Point3D(-1, -1,  1),
+        Point3D( 1, -1,  1),
+        Point3D(-1,  1,  1),
+        Point3D( 1,  1,  1),
+    ]
 
     def __init__(self, position: Point3D, half_size: int):
         self.children: list[OctreeNode|None] = [None for _ in range(8)]
@@ -37,18 +47,20 @@ class OctreeNode[T]:
             if len(self.occupants) == OctreeNode.MAX_OCCUPANTS:
                 new_half = self.half_size // 2
                 for i in range(8):
-                    x = (i % 2) * 2 - 1
-                    y = ((i // 2) % 2) * 2 - 1
-                    z = ((i // 4) % 2) * 2 - 1
-                    node_position: Point3D = Point3D(self.position.x + new_half * x, self.position.y + new_half * y, self.position.z + new_half * z)
+                    node_position: Point3D = Point3D(self.position.x, self.position.y, self.position.z) + OctreeNode.MAPPED[i] * new_half
                     self.children[i] = OctreeNode[T](node_position, new_half)
-                    for position, occupant in self.occupants.items():
-                        self.children[i].insert(position, occupant)
+                for position2, occupant in self.occupants.items():
+                    x = int(position2.x > self.position.x)
+                    y = int(position2.y > self.position.y)
+                    z = int(position2.z > self.position.z)
+                    self.children[x + y * 2 + z * 4].insert(position2, occupant)
                 self.occupants = {}
                 return
         else:
-            for child in self.children:
-                child.insert(position, data)
+            x = int(position.x > self.position.x)
+            y = int(position.y > self.position.y)
+            z = int(position.z > self.position.z)
+            self.children[x + y * 2 + z * 4].insert(position, data)
     
     def pop(self, position: Point3D) -> bool:
         if not (self.position.x - self.half_size < position.x < self.position.x + self.half_size and

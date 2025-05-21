@@ -16,17 +16,11 @@ def moveToTarget(coordinator: ECSCoordinator, terrain: Terrain):
         position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
         brain_component: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
         if brain_component.target_position.valid:
+            distance: Point3D = (brain_component.target_position.position - position)
 
-            if brain_component.target_position.position == position:
-                continue
-
-            step1 = brain_component.target_position.position - position
-
-            step2 = step1.asVector3D()
-
-            direction: Vector3D = step2.norm()
-
-            coordinator.setComponent(entity_id, constants.POSITION_COMPONENT, position + (direction * move_to_target.speed).asPoint3D())
+            if distance.magnitude() > 0:
+                direction: Vector3D = distance.asVector3D().norm()
+                coordinator.setComponent(entity_id, constants.POSITION_COMPONENT, position + (direction * move_to_target.speed).asPoint3D())
 
 def eatTarget(coordinator: ECSCoordinator):
     for entity_id in coordinator.getEntitiesWithComponent(constants.EAT_TARGET_COMPONENT):
@@ -42,15 +36,12 @@ def eatTarget(coordinator: ECSCoordinator):
             if coordinator.hasComponent(brain_component.target_creature.creature, constants.SIZE_HEALTH_COMPONENT):
                 health = coordinator.getComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT)
                 sizer *= health.current / health.max
-            
             if entity_pos.distSQ(position) <= (sizer + size) ** 2:
                 diet: DietComponent = coordinator.getComponent(entity_id, constants.DIET_COMPONENT)
                 nutrition: NutrientSource = coordinator.getComponent(brain_component.target_creature.creature, constants.NUTRIENT_SOURCE_COMPONENT)
-                #print(nutrition)
-                coordinator.setComponent(entity_id, constants.DIET_COMPONENT, diet.updated(nutrition))
+                coordinator.setComponent(entity_id, constants.DIET_COMPONENT, diet.updated(nutrition, eat_target.amount))
                 coordinator.setComponent(entity_id, constants.NUTRIENT_SOURCE_COMPONENT, NutrientSource({nut: max(amounting - eat_target.amount, 0) for nut, amounting in nutrition.nutrients.items()}))
                 if coordinator.hasComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT):
                     health: HealthComponent = coordinator.getComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT)
                     health.current = min(max(health.current - eat_target.damage, 0), health.max)
                     coordinator.setComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT, health)
-                    #print(health)

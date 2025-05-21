@@ -42,7 +42,7 @@ def main():
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
 
-    for _ in range(100):
+    for _ in range(2000):
         terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), random.randint(0, len(constants.species_types) - 1))
 
     pygame.init()
@@ -56,8 +56,11 @@ def main():
     manager: UIManager = UIManager((viewport.x, viewport.y))
     positionLabel = UILabel(pygame.Rect(viewport.x - 128, 0, 128, 32), f"{camera.x}, {camera.y}", manager)
     clock = pygame.time.Clock()
+    fpsLabel = UILabel(pygame.Rect(viewport.x - 128, 32, 128, 32), f"FPS: {clock.get_fps()}", manager)
 
     running = True
+
+    stutter = 0
 
     while running:
         time_delta: float = clock.tick(60)/1000.0
@@ -84,14 +87,20 @@ def main():
         #randomMovement(coordinator)
         updateNutrients(coordinator)
         growth(coordinator)
-        senseSight(coordinator, terrain)
-        workingMemory(coordinator)
-        assosciativeMemory(coordinator)
-        updateEvaluations(coordinator, terrain)
-        moveToTarget(coordinator, terrain)
-        eatTarget(coordinator)
+        if stutter % 30 == 0:
+            senseSight(coordinator, terrain)
+            workingMemory(coordinator)
+            assosciativeMemory(coordinator)
+        elif stutter % 30 == 20:
+            updateEvaluations(coordinator, terrain)
+        if stutter % 3 == 0:
+            moveToTarget(coordinator, terrain)
+            eatTarget(coordinator)
+        
+        stutter += 1
 
         positionLabel.set_text(f"{camera.x}, {camera.y}")
+        fpsLabel.set_text(f"FPS: {clock.get_fps()}")
         
         manager.update(time_delta)
 

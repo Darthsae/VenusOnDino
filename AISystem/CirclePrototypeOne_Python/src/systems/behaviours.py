@@ -46,11 +46,11 @@ def eatTarget(coordinator: ECSCoordinator):
             if entity_pos.distSQ(position) <= (sizer + size) ** 2:
                 diet: DietComponent = coordinator.getComponent(entity_id, constants.DIET_COMPONENT)
                 nutrition: NutrientSource = coordinator.getComponent(brain_component.target_creature.creature, constants.NUTRIENT_SOURCE_COMPONENT)
-                print(nutrition)
+                #print(nutrition)
                 coordinator.setComponent(entity_id, constants.DIET_COMPONENT, diet.updated(nutrition))
                 coordinator.setComponent(entity_id, constants.NUTRIENT_SOURCE_COMPONENT, NutrientSource({nut: max(amounting - eat_target.amount, 0) for nut, amounting in nutrition.nutrients.items()}))
                 if coordinator.hasComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT):
                     health: HealthComponent = coordinator.getComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT)
                     health.current = min(max(health.current - eat_target.damage, 0), health.max)
                     coordinator.setComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT, health)
-                    print(health)
+                    #print(health)

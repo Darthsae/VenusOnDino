@@ -12,7 +12,7 @@ import pygame
 def renderTerrain(coordinator: ECSCoordinator, surface: Surface, camera: Point3D, view_size: Point2D, terrain: Terrain):
     top_left: Point2D = camera.asPoint2D() // constants.METERS_PER_TILE - terrain.position
     bottom_right: Point2D = (top_left // constants.METERS_PER_TILE - terrain.position + view_size // constants.PIXELS_PER_TILE)
-    surface.fill((16, 32, 168))
+    surface.fill((32, 48, 64))
     for y in range(int(max(top_left.y, 0)), int(min(bottom_right.y, Terrain.TERRAIN_SIZE))):
         for x in range(int(max(top_left.x, 0)), int(min(bottom_right.x, Terrain.TERRAIN_SIZE))):
             surface.fill(constants.tile_types[terrain.columns[y][x].topLayer().tile_type].color, ((x - camera.x / constants.METERS_PER_TILE) * constants.PIXELS_PER_TILE, (y - camera.y / constants.METERS_PER_TILE) * constants.PIXELS_PER_TILE, constants.PIXELS_PER_TILE, constants.PIXELS_PER_TILE))

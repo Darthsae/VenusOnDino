@@ -17,7 +17,7 @@ from .. import constants
 import random
 
 class Terrain:
-    TERRAIN_SIZE: int = 64
+    TERRAIN_SIZE: int = 100
     TERRAIN_HALF_SIZE: int = TERRAIN_SIZE // 2
 
     def __init__(self, position: Point2D):

@@ -18,7 +18,7 @@ class FoodEvaluator(IEvaluator):
         brain: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
         diet: DietComponent = coordinator.getComponent(entity_id, constants.DIET_COMPONENT)
         listable = diet.orderedStats()
-        print(listable)
+        #print(listable)
         sorted_food = sorted([(tup[0], tup[1], coordinator.getComponent(tup[1], constants.NUTRIENT_SOURCE_COMPONENT).worthForNeeds(listable)) for tup in brain.entities if coordinator.hasComponent(tup[1], constants.NUTRIENT_SOURCE_COMPONENT) and coordinator.getComponent(tup[1], constants.NUTRIENT_SOURCE_COMPONENT).worthForNeeds(listable) > 0], key=lambda tup: tup[2], reverse=True)
         if len(sorted_food) > 0:
             brain.target_position.setPosition(sorted_food[0][0], PositionContext.FOOD)

@@ -3,6 +3,11 @@ from .living_entity import Species
 from .ecs import ECSCoordinator, component
 from .ai.evaluator import IEvaluator, EvaluatorInstance
 from .ai.evaluators import TargetEvaluator
+from .components.diet_component import NutrientType
+from .texture_data import TextureData
+from pygame import Surface
+
+textures: list[TextureData] = []
 
 tile_types: list[TileType] = [
     TileType("Dirt", (168, 84, 0), PhysicalState.SOLID),
@@ -11,9 +16,10 @@ tile_types: list[TileType] = [
 ]
 
 species_types: list[Species] = [
-    Species("Test", (0, 255, 255), 1, 10, 50, 2, 10, [
+    Species("Test", (0, 255, 255), 0, 1, 10, 50, 2, 10, 0, 0, {(NutrientType.PROTEIN, 2.5)}, {}, [
         EvaluatorInstance(0, {})
-    ])
+    ]),
+    Species("Shrub", (0, 255, 0), 1, 2, 2, 50, 0, 0, 5, 0.1, {(NutrientType.PROTEIN, 2.5)}, {}, [])
 ]
 
 evaluator_types: list[IEvaluator] = [
@@ -36,3 +42,5 @@ ASSOSCIATIVE_MEMORY_COMPONENT: component
 DIET_COMPONENT: component
 HEALTH_COMPONENT: component
 MOVE_TO_TARGET_COMPONENT: component
+GROWTH_COMPONENT: component
+NUTRIENT_SOURCE_COMPONENT: component

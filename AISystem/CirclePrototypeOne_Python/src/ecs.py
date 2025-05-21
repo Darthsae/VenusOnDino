@@ -36,6 +36,9 @@ class ECSCoordinator:
         self.__components[component_id][entity_id] = data
         self.entities[entity_id] |= {component_id}
 
+    def hasComponent(self, entity_id: entity, component_id: component) -> bool:
+        return component_id in self.entities[entity_id]
+
     def getComponent[T](self, entity_id: entity, component_id: component) -> T:
         return self.__components[component_id][entity_id]
 

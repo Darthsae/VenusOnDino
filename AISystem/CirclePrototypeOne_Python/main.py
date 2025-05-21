@@ -4,14 +4,16 @@ from pygame_gui.elements import UILabel
 from src.world.terrain import Terrain
 from src.position import Point2D, Point3D
 from src.ecs import ECSCoordinator
-from src.systems.rendering import renderCircles, renderTerrain
+from src.systems.rendering import renderCircles, renderTextures, renderTerrain
 from src.systems.debug import randomMovement
 from src.systems.senses import senseSight
 from src.systems.memory import workingMemory, assosciativeMemory
 from src.systems.needs import updateNutrients
 from src.systems.evaluations import updateEvaluations
 from src.systems.behaviours import moveToTarget
+from src.systems.growth import growth
 from src import constants
+from src.texture_data import TextureData
 
 MOVEMENT_AMOUNT: int = 1
 
@@ -32,15 +34,22 @@ def main():
     constants.DIET_COMPONENT = coordinator.registerComponent()
     constants.HEALTH_COMPONENT = coordinator.registerComponent()
     constants.MOVE_TO_TARGET_COMPONENT = coordinator.registerComponent()
+    constants.GROWTH_COMPONENT = coordinator.registerComponent()
+    constants.NUTRIENT_SOURCE_COMPONENT = coordinator.registerComponent()
 
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
 
     for _ in range(100):
-        terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), 0)
+        terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), random.randint(0, len(constants.species_types) - 1))
 
     pygame.init()
     screen = pygame.display.set_mode((viewport.x, viewport.y))
+
+    constants.textures = [
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Tyrant.png"),
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Titan.png")
+    ]
     
     manager: UIManager = UIManager((viewport.x, viewport.y))
     positionLabel = UILabel(pygame.Rect(viewport.x - 128, 0, 128, 32), f"{camera.x}, {camera.y}", manager)
@@ -72,6 +81,7 @@ def main():
         
         #randomMovement(coordinator)
         updateNutrients(coordinator)
+        growth(coordinator)
         senseSight(coordinator, terrain)
         workingMemory(coordinator)
         assosciativeMemory(coordinator)
@@ -86,6 +96,7 @@ def main():
 
         renderTerrain(coordinator, screen, camera, viewport, terrain)
         renderCircles(coordinator, screen, camera, viewport, terrain)
+        renderTextures(coordinator, screen, camera, viewport, terrain)
 
         manager.draw_ui(screen)
 

@@ -13,8 +13,6 @@ def moveToTarget(coordinator: ECSCoordinator, terrain: Terrain):
         if brain_component.target_position.valid:
 
             if brain_component.target_position.position == position:
-                print("Noodle")
-
                 continue
 
             step1 = brain_component.target_position.position - position
@@ -24,3 +22,7 @@ def moveToTarget(coordinator: ECSCoordinator, terrain: Terrain):
             direction: Vector3D = step2.norm()
 
             coordinator.setComponent(entity_id, constants.POSITION_COMPONENT, position + (direction * move_to_target.speed).asPoint3D())
+
+def eatTarget(coordinator: ECSCoordinator):
+    for entity_id in coordinator.getEntitiesWithComponent(constants.EAT_TARGET_COMPONENT):
+        ...

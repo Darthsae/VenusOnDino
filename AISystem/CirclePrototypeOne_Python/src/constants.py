@@ -15,7 +15,7 @@ tile_types: list[TileType] = [
 ]
 
 species_types: list[Species] = [
-    Species("Test", (0, 255, 255), 0, 1, 10, 500, 2, 10, 0, 0, {NutrientType.PROTEIN: 2.5}, [
+    Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 32, 0, 0, {NutrientType.PROTEIN: 2.5}, [
         NutrientStat(NutrientType.FIBER, 0.1, 3.0, 0.005, 0.25)
     ], 1, 0.1, False, [
         "brain",

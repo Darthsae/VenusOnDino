@@ -46,7 +46,7 @@ def main():
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
 
-    for _ in range(1000):
+    for _ in range(2000):
         terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), random.randint(0, len(constants.species_types) - 1))
 
     

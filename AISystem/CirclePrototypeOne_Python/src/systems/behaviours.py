@@ -20,6 +20,7 @@ def moveToTarget(coordinator: ECSCoordinator, terrain: Terrain):
 
             if distance.magnitude() > 0:
                 direction: Vector3D = distance.asVector3D().norm()
+                coordinator.setComponent(entity_id, constants.DIRTY_POSITION_COMPONENT, position)
                 coordinator.setComponent(entity_id, constants.POSITION_COMPONENT, position + (direction * move_to_target.speed).asPoint3D())
 
 def eatTarget(coordinator: ECSCoordinator):

@@ -12,6 +12,7 @@ from src.systems.needs import updateNutrients
 from src.systems.evaluations import updateEvaluations
 from src.systems.behaviours import moveToTarget, eatTarget
 from src.systems.growth import growth
+from src.systems.remove_components import updateRemoveComponent
 from src import constants
 from src.texture_data import TextureData
 
@@ -38,12 +39,18 @@ def main():
     constants.NUTRIENT_SOURCE_COMPONENT = coordinator.registerComponent()
     constants.EAT_TARGET_COMPONENT = coordinator.registerComponent()
     constants.SIZE_HEALTH_COMPONENT = coordinator.registerComponent()
+    constants.REMOVE_HEALTH_COMPONENT = coordinator.registerComponent()
+    constants.REMOVE_ENTITY_COMPONENT = coordinator.registerComponent()
+    constants.DIRTY_POSITION_COMPONENT = coordinator.registerComponent()
 
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
 
     for _ in range(1000):
         terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), random.randint(0, len(constants.species_types) - 1))
+
+    
+    terrain.regenerateEntityQuadtree(coordinator)
 
     pygame.init()
     screen = pygame.display.set_mode((viewport.x, viewport.y))
@@ -114,9 +121,9 @@ def main():
                         case pygame.K_UP:
                             camera.y -= MOVEMENT_AMOUNT
                             position_label.set_text(f"Camera: {camera.x}, {camera.y}")
-                case pygame_gui.UI_BUTTON_PRESSED:
-                    if event.ui_element == True:
-                        print("back")
+                #case pygame_gui.UI_BUTTON_PRESSED:
+                #    if event.ui_element == True:
+                #        print("back")
                 case pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                     if event.ui_element == fps_slider:
                         constants.FPS = fps_slider.get_current_value()
@@ -147,6 +154,9 @@ def main():
                 moveToTarget(coordinator, terrain)
                 eatTarget(coordinator)
             
+            terrain.updateDirtyEntityQuadtree(coordinator)
+            updateRemoveComponent(coordinator)
+            
             stutter_double = not stutter_double
             stutter_triple += 1
             stutter_thirty += 1
@@ -164,8 +174,6 @@ def main():
             swapPause()
         
         manager.update(time_delta)
-
-        terrain.regenerateEntityQuadtree(coordinator)
 
         # Rendering
         screen.fill((32, 48, 64))

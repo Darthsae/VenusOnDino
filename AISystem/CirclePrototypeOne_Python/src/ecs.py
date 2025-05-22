@@ -36,6 +36,12 @@ class ECSCoordinator:
         self.__components[component_id][entity_id] = data
         self.entities[entity_id] |= {component_id}
 
+    def removeComponents(self, entity_id: entity, components: set[component]):
+        self.entities[entity_id] -= components
+        for component in components:
+            #print(component)
+            self.__components[component].pop(entity_id)
+
     def hasComponent(self, entity_id: entity, component_id: component) -> bool:
         return component_id in self.entities[entity_id]
 

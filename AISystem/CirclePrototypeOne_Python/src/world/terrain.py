@@ -33,6 +33,18 @@ class Terrain:
             position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
             self.entities.insert(position, entity_id)
 
+    def updateDirtyEntityQuadtree(self, coordinator: ECSCoordinator):
+        for entity_id in coordinator.getEntitiesWithComponent(constants.DIRTY_POSITION_COMPONENT):
+            old_position: Point3D = coordinator.getComponent(entity_id, constants.DIRTY_POSITION_COMPONENT)
+            position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
+            coordinator.removeComponents(entity_id, {constants.DIRTY_POSITION_COMPONENT})
+            self.entities.pop(old_position)
+            self.entities.insert(position, entity_id)
+
+        for entity_id in coordinator.getEntitiesWithComponent(constants.REMOVE_ENTITY_COMPONENT) & coordinator.getEntitiesWithComponent(constants.POSITION_COMPONENT):
+            position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
+            self.entities.pop(position)
+
     def spoof(self):
         for y in range(Terrain.TERRAIN_SIZE):
             for x in range(Terrain.TERRAIN_SIZE):
@@ -61,5 +73,7 @@ class Terrain:
             coordinator.setComponent(new_entity, constants.DIET_COMPONENT, DietComponent(constants.species_types[species].diet.copy()))
         if constants.species_types[species].eats > -1:
             coordinator.setComponent(new_entity, constants.EAT_TARGET_COMPONENT, EatTargetComponent(constants.species_types[species].eats, constants.species_types[species].eat_amount))
+        if len(constants.species_types[species].remover) > 0:
+            coordinator.setComponent(new_entity, constants.REMOVE_HEALTH_COMPONENT, constants.species_types[species].remover.copy())
 
         return new_entity

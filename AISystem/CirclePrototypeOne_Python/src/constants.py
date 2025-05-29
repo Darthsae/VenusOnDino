@@ -56,7 +56,7 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 1200, 1200),
+    ], 1200, 1200, None),
     Species("Shrub", (0, 255, 0), 2, 2, 2, 600, 0, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 125}, [], -1, 0, True, [
         "health",
         "size_health",
@@ -64,7 +64,7 @@ species_types: list[Species] = [
         "remove_health"
     ], [], [
         ("remove_entity", True)
-    ], 0, 0),
+    ], 0, 0, (4.5, 1, 2, 1200, 0, 0.2)),
     Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0.8, 0, 0, {NutrientType.PROTEIN: 225}, [
         NutrientStat(NutrientType.PROTEIN, 0.1, 300.0, 0.005, 25),
         NutrientStat(NutrientType.WATER, 0.01, 150.0, 0.001, 15)
@@ -95,7 +95,7 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 6000, 6000),
+    ], 6000, 6000, None),
 ]
 
 evaluator_types: list = [
@@ -158,6 +158,8 @@ def componentPull(id: str):
             return DAMAGED_COMPONENT
         case "timer":
             return TIMER_COMPONENT
+        case "reproduce":
+            return REPRODUCE_COMPONENT
 
 POSITION_COMPONENT: component
 PHYSICAL_BODY_COMPONENT: component
@@ -183,6 +185,7 @@ PHYSICAL_BUZZ_COMPONENT: component
 ENERGY_COMPONENT: component
 DAMAGED_COMPONENT: component
 TIMER_COMPONENT: component
+REPRODUCE_COMPONENT: component
 
 DRAW_CIRCLES: bool = False
 DRAW_SPRITES: bool = True

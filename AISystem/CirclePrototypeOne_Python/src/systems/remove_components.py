@@ -3,6 +3,10 @@ from .. import constants
 from ..components.health_component import HealthComponent
 from ..components.physical_body import PhysicalBody
 from ..components.timer_component import TimerComponent
+from ..components.reproduce_component import ReproduceComponent
+from ..world.terrain import Terrain
+from ..position import Point3D
+import random
 
 def updateRemoveComponent(coordinator: ECSCoordinator):
     for entity_id in coordinator.getEntitiesWithComponent(constants.REMOVE_HEALTH_COMPONENT):

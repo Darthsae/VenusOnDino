@@ -14,6 +14,7 @@ from ..components.nutrient_source import NutrientSource
 from ..components.growth_component import GrowthComponent
 from ..components.eat_target_component import EatTargetComponent
 from ..components.energy_component import EnergyComponent
+from ..components.reproduce_component import ReproduceComponent
 from .. import constants
 import random
 
@@ -97,4 +98,7 @@ class Terrain:
             coordinator.setComponent(new_entity, constants.ADD_HEALTH_COMPONENT, constants.species_types[species].adder.copy())
         if constants.species_types[species].energy_max > 0:
             coordinator.setComponent(new_entity, constants.ENERGY_COMPONENT, EnergyComponent(constants.species_types[species].energy, constants.species_types[species].energy_max))
+        if constants.species_types[species].reproduction != None:
+            reproduction_data = constants.species_types[species].reproduction
+            coordinator.setComponent(new_entity, constants.REPRODUCE_COMPONENT, ReproduceComponent(reproduction_data[0], reproduction_data[1], reproduction_data[2], reproduction_data[3], reproduction_data[4], reproduction_data[5]))
         return new_entity

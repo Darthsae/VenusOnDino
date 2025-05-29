@@ -12,3 +12,9 @@ def growth(coordinator: ECSCoordinator):
             physical_body.size += growth_component.amount
             coordinator.setComponent(entity_id, constants.GROWTH_COMPONENT, growth_component)
             coordinator.setComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT, physical_body)
+        else:
+            coordinator.removeComponents(entity_id, {constants.GROWTH_COMPONENT})
+            if coordinator.hasComponent(entity_id, constants.REMOVE_HEALTH_COMPONENT):
+                a: list[str] = coordinator.getComponent(entity_id, constants.REMOVE_HEALTH_COMPONENT)
+                if "growth" in a:
+                    a.remove("growth")

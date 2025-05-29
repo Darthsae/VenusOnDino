@@ -13,6 +13,7 @@ from src.systems.behaviours import moveToTarget, eatTarget, brainValidate, epoch
 from src.systems.growth import growth
 from src.systems.remove_components import updateRemoveComponent, updateRemoveEntity, updateAddComponent, updateSizeEntity
 from src.systems.timer import timerUpdate
+from src.systems.reproduction import updateReproduction
 from src import constants
 from src.texture_data import TextureData
 
@@ -47,6 +48,7 @@ def main():
     constants.ENERGY_COMPONENT = coordinator.registerComponent()
     constants.DAMAGED_COMPONENT = coordinator.registerComponent()
     constants.TIMER_COMPONENT = coordinator.registerComponent()
+    constants.REPRODUCE_COMPONENT = coordinator.registerComponent()
 
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
@@ -191,10 +193,13 @@ def main():
                     # Evaluators
                     updateEvaluations(coordinator)
             
-            if stutter_triple == 0:
-                # Behaviours
-                moveToTarget(coordinator)
-                eatTarget(coordinator)
+            match stutter_triple:
+                case 0:
+                    # Behaviours
+                    moveToTarget(coordinator)
+                    eatTarget(coordinator)
+                case 1:
+                    updateReproduction(coordinator, terrain)
             
             updateAddComponent(coordinator)
             updateSizeEntity(coordinator)

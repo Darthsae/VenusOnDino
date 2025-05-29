@@ -13,24 +13,24 @@ textures: list[TextureData] = []
 tile_types: list[TileType] = [
     TileType("Dirt", (168, 84, 0), PhysicalState.SOLID),
     TileType("Water", (0, 0, 200), PhysicalState.LIQUID, [
-        #("nutrient_source", NutrientSource({NutrientType.WATER: 1000}))
+        ("nutrient_source", NutrientSource({NutrientType.WATER: 1000}))
     ]),
     TileType("Air", (255, 255, 255), PhysicalState.GAS)
 ]
 
 species_types: list[Species] = [
-    Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 10, 0, 0, {NutrientType.PROTEIN: 2.5}, [
+    Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 10, 0, 0, {NutrientType.PROTEIN: 200.5}, [
         NutrientStat(NutrientType.FIBER, 0.1, 30.0, 0.005, 0.25),
-        #NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.005, 0.25)
-    ], 10, 0.1, False, [
+        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.005, 0.25)
+    ], 10, 0.1, True, [
         "brain",
         "sight",
         "diet",
         "health",
+        "size_health",
         "eat_target",
         "move_to_target",
-        "remove_health",
-        "textured"
+        "remove_health"
     ], [
         EvaluatorInstance(2, {
             "threat": [
@@ -51,17 +51,17 @@ species_types: list[Species] = [
         ("remove_entity", True)
     ]),
     Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0, 0, {NutrientType.PROTEIN: 2.5}, [
-        NutrientStat(NutrientType.PROTEIN, 0.1, 30.0, 0.005, 0.25),
-        #NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 0.15)
-    ], 10, 0.1, False, [
+        NutrientStat(NutrientType.PROTEIN, 0.1, 30000.0, 0.005, 0.15),
+        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 0.15)
+    ], 10, 0.1, True, [
         "brain",
         "sight",
         "diet",
         "health",
+        "size_health",
         "eat_target",
         "move_to_target",
-        "remove_health",
-        "textured"
+        "remove_health"
     ], [
         EvaluatorInstance(2, {
             "threat": [

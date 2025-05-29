@@ -38,5 +38,6 @@ def componentEvaluator(coordinator: ECSCoordinator, entity_id: entity, terrain: 
     for i, entity_eval in enumerate(brain.entities):
         for componenta in components:
             if coordinator.hasComponent(entity_eval.id, componenta):
+                #print("Noodle")
                 brain.entities[i].threat = 0.0
                 break

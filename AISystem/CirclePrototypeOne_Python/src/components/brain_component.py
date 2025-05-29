@@ -19,7 +19,7 @@ class EntityTarget:
     nutrition: float = None
 
     def threatByDistance(self, point: Point3D):
-        return self.threat / (point.distSQ(self.position) if self.position != point else 1.0) if self.threat != None else 0.0
+        return (self.threat * abs(self.threat)) / (point.distSQ(self.position) if self.position != point else 1.0) if self.threat != None else 0.0
 
     def nutritionByDistance(self, point: Point3D):
         return self.nutrition / (point.distSQ(self.position) if self.position != point else 1.0) if self.nutrition != None else 0.0

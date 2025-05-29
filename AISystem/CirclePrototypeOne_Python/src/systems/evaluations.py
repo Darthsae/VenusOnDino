@@ -13,6 +13,8 @@ def updateEvaluations(coordinator: ECSCoordinator, terrain: Terrain):
         for evaluator in brain_component.evaluators:
             constants.evaluator_types[evaluator.evaluator_id](coordinator, entity_id, terrain, evaluator.data)
         if len(brain_component.entities) > 0:
+            #for wacko in brain_component.entities:
+                #print(f"{wacko.nutritionByDistance(pos)} - {wacko.threatByDistance(pos)} = {wacko.nutritionByDistance(pos) - wacko.threatByDistance(pos)}")
             sortation = sorted(brain_component.entities, key=lambda x: x.nutritionByDistance(pos) - x.threatByDistance(pos), reverse=True)[0]
             if sortation.nutrition > 0:
                 #print(sortation.nutrition)

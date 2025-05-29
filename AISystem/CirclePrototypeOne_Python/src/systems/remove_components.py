@@ -16,6 +16,7 @@ def updateAddComponent(coordinator: ECSCoordinator):
         if health_component.current == 0:
             for comp, dat in remove_component:
                 coordinator.setComponent(entity_id, constants.componentPull(comp), dat)
+            coordinator.removeComponents(entity_id, {constants.ADD_HEALTH_COMPONENT})
 
 def updateRemoveEntity(coordinator: ECSCoordinator):
     for entity_id in coordinator.getEntitiesWithComponent(constants.REMOVE_ENTITY_COMPONENT):

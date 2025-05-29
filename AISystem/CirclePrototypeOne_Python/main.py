@@ -10,9 +10,10 @@ from src.systems.senses import senseSight
 from src.systems.memory import workingMemory, assosciativeMemory
 from src.systems.needs import updateNutrients, updateEnergy, damagedComponent
 from src.systems.evaluations import updateEvaluations
-from src.systems.behaviours import moveToTarget, eatTarget, brainValidate, epoch
+from src.systems.behaviours import moveToTarget, eatTarget, brainValidate, epoch, emoteReset
 from src.systems.growth import growth
 from src.systems.remove_components import updateRemoveComponent, updateRemoveEntity, updateAddComponent, updateSizeEntity
+from src.systems.timer import timerUpdate
 from src import constants
 from src.texture_data import TextureData
 
@@ -46,6 +47,7 @@ def main():
     constants.PHYSICAL_BUZZ_COMPONENT = coordinator.registerComponent()
     constants.ENERGY_COMPONENT = coordinator.registerComponent()
     constants.DAMAGED_COMPONENT = coordinator.registerComponent()
+    constants.TIMER_COMPONENT = coordinator.registerComponent()
 
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
@@ -76,6 +78,7 @@ def main():
 
     constants.sleepy = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Sleeping.png")
     constants.hungy = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Eat.png")
+    constants.thirst_trap = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Drink.png")
 
     def swapCircles():
         constants.DRAW_CIRCLES = not constants.DRAW_CIRCLES
@@ -158,6 +161,7 @@ def main():
         if constants.RUNNING:
             if stutter_double:
                 # MISC
+                timerUpdate(coordinator)
                 updateNutrients(coordinator)
                 updateEnergy(coordinator)
                 growth(coordinator)
@@ -175,12 +179,13 @@ def main():
                 case 20:
                     # Evaluators
                     updateEvaluations(coordinator, terrain)
+                case 25:
+                    emoteReset(coordinator)
             
             if stutter_triple == 0:
                 # Behaviours
                 moveToTarget(coordinator, terrain)
                 eatTarget(coordinator)
-            
             
             updateAddComponent(coordinator)
             updateSizeEntity(coordinator)

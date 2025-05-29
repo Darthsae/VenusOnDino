@@ -48,7 +48,6 @@ def eatTarget(coordinator: ECSCoordinator):
                 health = coordinator.getComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT)
                 sizer *= health.current / health.max
             if entity_pos.distSQ(position) <= (sizer + size) ** 2:
-                brain_component.emoticon = Emoticon.EATING
                 pag = entity_pos - position
                 if pag.magnitude() != 0:
                     direction: Vector3D = pag.norm()
@@ -57,9 +56,10 @@ def eatTarget(coordinator: ECSCoordinator):
                     coordinator.setComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT, physical_body)
                 diet: DietComponent = coordinator.getComponent(entity_id, constants.DIET_COMPONENT)
                 nutrition: NutrientSource = coordinator.getComponent(brain_component.target_creature.creature, constants.NUTRIENT_SOURCE_COMPONENT)
-                #if constants.NutrientType.PROTEIN in nutrition.nutrients:
-                    #print(diet)
-                    #print(nutrition)
+                if constants.NutrientType.PROTEIN in nutrition.nutrients and len(nutrition.nutrients) == 1:
+                    brain_component.emoticon = Emoticon.DRINKING
+                else:
+                    brain_component.emoticon = Emoticon.NONE
                 coordinator.setComponent(entity_id, constants.DIET_COMPONENT, diet.updated(nutrition, eat_target.amount))
                 if coordinator.hasComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT):
                     health: HealthComponent = coordinator.getComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT)
@@ -95,3 +95,8 @@ def epoch(coordinator: ECSCoordinator, terrain: Terrain):
             poiawe += Point3D(random.uniform(-0.01, 0.01), random.uniform(-0.01, 0.01), random.uniform(-0.01, 0.01))
         coordinator.setComponent(entity_id, constants.POSITION_COMPONENT, poiawe)
         smergle.add(poiawe)
+
+def emoteReset(coordinator: ECSCoordinator):
+    for entity_id in coordinator.getEntitiesWithComponent(constants.BRAIN_COMPONENT):
+        brain_component: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
+        brain_component.emoticon = Emoticon.NONE

@@ -92,10 +92,15 @@ def renderEmoticons(coordinator: ECSCoordinator, surface: Surface, camera: Point
         
         if brain.state == CreatureState.SLEEPING:
             applicable: TextureData = constants.sleepy
+            serf: Surface = pygame.transform.scale_by(applicable.texture, constants.PIXELS_PER_METER / max(applicable.rect.width, applicable.rect.height) * 4.0)
         elif brain.emoticon == Emoticon.EATING:
             applicable: TextureData = constants.hungy
+            serf: Surface = pygame.transform.scale_by(applicable.texture, constants.PIXELS_PER_METER / max(applicable.rect.width, applicable.rect.height) * 1.5)
+        elif brain.emoticon == Emoticon.DRINKING:
+            applicable: TextureData = constants.thirst_trap
+            serf: Surface = pygame.transform.scale_by(applicable.texture, constants.PIXELS_PER_METER / max(applicable.rect.width, applicable.rect.height) * 1.5)
         
-        serf: Surface = pygame.transform.scale_by(applicable.texture, constants.PIXELS_PER_METER / max(applicable.rect.width, applicable.rect.height) * 4.0)
+        
         serf_rekt = serf.get_rect()
         serf_rekt.center =  (new_rect.centerx, new_rect.centery + constants.PIXELS_PER_METER / 12)
 

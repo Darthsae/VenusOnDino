@@ -7,11 +7,13 @@ from .components.diet_component import NutrientType, NutrientStat
 from .texture_data import TextureData
 from .components.nutrient_source import NutrientSource
 from .components.textured_component import TexturedComponent
+from .components.timer_component import TimerComponent
 
 textures: list[TextureData] = []
 
 hungy: TextureData
 sleepy: TextureData
+thirst_trap: TextureData
 
 tile_types: list[TileType] = [
     TileType("Dirt", (236, 184, 138), TextureData.load("../../Assets/Textures/PixelArt/TopDown/Dirt.png"), PhysicalState.SOLID, [
@@ -48,7 +50,10 @@ species_types: list[Species] = [
         ("physical_buzz", ([
             "textured"
         ], [
-            ("remove_entity", True)
+            ("remove_entity", True),
+        ])),
+        ("timer", TimerComponent(0, 720, [], [
+            ("textured", TexturedComponent(4))
         ]))
     ], 1200, 1200),
     Species("Shrub", (0, 255, 0), 2, 2, 2, 600, 0, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 25.5}, [], -1, 0, True, [
@@ -85,6 +90,9 @@ species_types: list[Species] = [
             "textured"
         ], [
             ("remove_entity", True)
+        ])),
+        ("timer", TimerComponent(0, 720, [], [
+            ("textured", TexturedComponent(4))
         ]))
     ], 6000, 6000),
 ]
@@ -147,6 +155,8 @@ def componentPull(id: str):
             return ENERGY_COMPONENT
         case "damaged":
             return DAMAGED_COMPONENT
+        case "timer":
+            return TIMER_COMPONENT
 
 POSITION_COMPONENT: component
 PHYSICAL_BODY_COMPONENT: component
@@ -171,6 +181,7 @@ ADD_HEALTH_COMPONENT: component
 PHYSICAL_BUZZ_COMPONENT: component
 ENERGY_COMPONENT: component
 DAMAGED_COMPONENT: component
+TIMER_COMPONENT: component
 
 DRAW_CIRCLES: bool = False
 DRAW_SPRITES: bool = True

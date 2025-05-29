@@ -2,6 +2,7 @@ from ..ecs import ECSCoordinator
 from .. import constants
 from ..components.health_component import HealthComponent
 from ..components.physical_body import PhysicalBody
+from ..components.timer_component import TimerComponent
 
 def updateRemoveComponent(coordinator: ECSCoordinator):
     for entity_id in coordinator.getEntitiesWithComponent(constants.REMOVE_HEALTH_COMPONENT):
@@ -16,7 +17,7 @@ def updateAddComponent(coordinator: ECSCoordinator):
         health_component: HealthComponent = coordinator.getComponent(entity_id, constants.HEALTH_COMPONENT)
         if health_component.current == 0:
             for comp, dat in remove_component:
-                coordinator.setComponent(entity_id, constants.componentPull(comp), dat)
+                coordinator.setComponent(entity_id, constants.componentPull(comp), dat if comp != "timer" else TimerComponent(0, dat.time, dat.remove.copy(), dat.add.copy()))
             coordinator.removeComponents(entity_id, {constants.ADD_HEALTH_COMPONENT})
 
 def updateRemoveEntity(coordinator: ECSCoordinator):
@@ -34,5 +35,5 @@ def updateSizeEntity(coordinator: ECSCoordinator):
             #print(f"marking {entity_id} for deletion")
             for comp, dat in remover_component:
                 #print(f"removed {comp} {dat}")
-                coordinator.setComponent(entity_id, constants.componentPull(comp), dat)
+                coordinator.setComponent(entity_id, constants.componentPull(comp), dat if comp != "timer" else TimerComponent(0, dat.time, dat.remove.copy(), dat.add.copy()))
             coordinator.removeComponents(entity_id, set({constants.PHYSICAL_BUZZ_COMPONENT}) | set(map(constants.componentPull, remove_component)))

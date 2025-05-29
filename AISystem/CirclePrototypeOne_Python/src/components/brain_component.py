@@ -54,6 +54,7 @@ class CreatureState(Enum):
 class Emoticon(Enum):
     NONE = 0
     EATING = 1
+    DRINKING = 2
 
 @dataclass
 class BrainComponent:

@@ -76,7 +76,7 @@ def main():
     ]
 
     constants.sleepy = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Sleeping.png")
-    constants.hungy = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Eat.png")
+    constants.nom_nom = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Eat.png")
     constants.thirst_trap = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Drink.png")
     constants.boot_coprolite = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Roaming.png")
 

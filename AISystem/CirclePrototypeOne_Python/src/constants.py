@@ -11,7 +11,7 @@ from .components.timer_component import TimerComponent
 
 textures: list[TextureData] = []
 
-hungy: TextureData
+nom_nom: TextureData
 sleepy: TextureData
 thirst_trap: TextureData
 boot_coprolite: TextureData

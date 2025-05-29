@@ -4,7 +4,7 @@ from ..position import Point2D, Point3D
 from pygame import Surface, Rect
 from pygame.gfxdraw import filled_circle
 from .. import constants
-from ..components.brain_component import BrainComponent, CreatureState
+from ..components.brain_component import BrainComponent, CreatureState, Emoticon
 from ..components.physical_body import PhysicalBody
 from ..components.textured_component import TexturedComponent
 from ..texture_data import TextureData
@@ -23,7 +23,7 @@ def renderTerrainTextures(coordinator: ECSCoordinator, surface: Surface, camera:
     for y in range(int(max(top_left.y - 1, 0)), int(min(bottom_right.y + 1, Terrain.TERRAIN_SIZE))):
         for x in range(int(max(top_left.x - 1, 0)), int(min(bottom_right.x + 1, Terrain.TERRAIN_SIZE))):
             new_position = Point2D((x - camera.x / constants.METERS_PER_TILE) * constants.PIXELS_PER_TILE, (y - camera.y / constants.METERS_PER_TILE) * constants.PIXELS_PER_TILE)
-            texture: TextureData = constants.tile_types[terrain.columns[y][x].topLayer().tile_type].texture.texture
+            texture: TextureData = constants.tile_types[terrain.columns[y][x].topLayer().tile_type].texture
             scaling_factor: float = constants.PIXELS_PER_TILE / max(texture.rect.width, texture.rect.height)
             newton = pygame.transform.scale_by(texture.texture, scaling_factor)
             new_rect = Rect(int(new_position.x - texture.rect.width * scaling_factor * 0.5), int(new_position.y - texture.rect.height * scaling_factor * 0.5), texture.rect.width * scaling_factor, texture.rect.height * scaling_factor)
@@ -78,7 +78,7 @@ def renderEmoticons(coordinator: ECSCoordinator, surface: Surface, camera: Point
         if not coordinator.hasComponent(entity, constants.BRAIN_COMPONENT) or not coordinator.hasComponent(entity, constants.TEXTURED_COMPONENT):
             continue
         brain: BrainComponent = coordinator.getComponent(entity, constants.BRAIN_COMPONENT)
-        if brain.state == CreatureState.AWAKE:
+        if brain.state == CreatureState.AWAKE and brain.emoticon == Emoticon.NONE:
             continue
         physicalBody: PhysicalBody = coordinator.getComponent(entity, constants.PHYSICAL_BODY_COMPONENT)
         texture_component: TexturedComponent = coordinator.getComponent(entity, constants.TEXTURED_COMPONENT)
@@ -90,7 +90,11 @@ def renderEmoticons(coordinator: ECSCoordinator, surface: Surface, camera: Point
         new_position = (position.asPoint2D()  - camera) * constants.PIXELS_PER_METER
         new_rect = Rect(int(new_position.x - texture.rect.width * scaling_factor * 0.5), int(new_position.y - texture.rect.height * scaling_factor * 0.5), texture.rect.width * scaling_factor, texture.rect.height * scaling_factor)
         
-        applicable: TextureData = constants.sleepy
+        if brain.state == CreatureState.SLEEPING:
+            applicable: TextureData = constants.sleepy
+        elif brain.emoticon == Emoticon.EATING:
+            applicable: TextureData = constants.hungy
+        
         serf: Surface = pygame.transform.scale_by(applicable.texture, constants.PIXELS_PER_METER / max(applicable.rect.width, applicable.rect.height) * 4.0)
         serf_rekt = serf.get_rect()
         serf_rekt.center =  (new_rect.centerx, new_rect.centery + constants.PIXELS_PER_METER / 12)

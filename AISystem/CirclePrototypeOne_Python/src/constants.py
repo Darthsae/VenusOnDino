@@ -10,6 +10,7 @@ from .components.textured_component import TexturedComponent
 
 textures: list[TextureData] = []
 
+hungy: TextureData
 sleepy: TextureData
 
 tile_types: list[TileType] = [

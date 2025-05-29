@@ -75,6 +75,7 @@ def main():
     ]
 
     constants.sleepy = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Sleeping.png")
+    constants.hungy = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Eat.png")
 
     def swapCircles():
         constants.DRAW_CIRCLES = not constants.DRAW_CIRCLES

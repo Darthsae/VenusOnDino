@@ -3,7 +3,7 @@ from ..world.terrain import Terrain
 from ..position import Vector3D, Point3D
 from ..components.move_to_target_component import MoveToTargetComponent
 from ..components.eat_target_component import EatTargetComponent
-from ..components.brain_component import BrainComponent
+from ..components.brain_component import BrainComponent, Emoticon
 from ..components.physical_body import PhysicalBody
 from ..components.diet_component import DietComponent
 from ..components.nutrient_source import NutrientSource
@@ -48,6 +48,7 @@ def eatTarget(coordinator: ECSCoordinator):
                 health = coordinator.getComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT)
                 sizer *= health.current / health.max
             if entity_pos.distSQ(position) <= (sizer + size) ** 2:
+                brain_component.emoticon = Emoticon.EATING
                 pag = entity_pos - position
                 if pag.magnitude() != 0:
                     direction: Vector3D = pag.norm()

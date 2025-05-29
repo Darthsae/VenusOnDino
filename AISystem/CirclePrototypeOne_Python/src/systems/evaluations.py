@@ -1,6 +1,6 @@
 from ..ecs import ECSCoordinator
 from .. import constants
-from ..components.brain_component import BrainComponent, PositionContext, CreatureState
+from ..components.brain_component import BrainComponent, PositionContext, CreatureState, Emoticon
 from ..components.energy_component import EnergyComponent
 from ..world.terrain import Terrain
 from ..position import Point3D
@@ -10,6 +10,7 @@ from random import randint
 def updateEvaluations(coordinator: ECSCoordinator, terrain: Terrain):
     for entity_id in coordinator.getEntitiesWithComponent(constants.BRAIN_COMPONENT):
         brain_component: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
+        brain_component.emoticon = Emoticon.NONE
         if brain_component.state == CreatureState.AWAKE:
             pos = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
             for evaluator in brain_component.evaluators:

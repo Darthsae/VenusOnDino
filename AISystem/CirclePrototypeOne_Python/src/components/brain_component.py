@@ -51,6 +51,10 @@ class CreatureState(Enum):
     AWAKE = 0
     SLEEPING = 1
 
+class Emoticon(Enum):
+    NONE = 0
+    EATING = 1
+
 @dataclass
 class BrainComponent:
     evaluators: list[EvaluatorInstance]
@@ -58,3 +62,4 @@ class BrainComponent:
     target_position: TargetPosition
     target_creature: TargetCreature
     state: CreatureState = CreatureState.AWAKE
+    emoticon: Emoticon = Emoticon.NONE

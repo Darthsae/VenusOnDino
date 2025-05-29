@@ -9,7 +9,7 @@ from src.systems.senses import senseSight
 from src.systems.memory import workingMemory, assosciativeMemory
 from src.systems.needs import updateNutrients, updateEnergy, damagedComponent
 from src.systems.evaluations import updateEvaluations
-from src.systems.behaviours import moveToTarget, eatTarget, brainValidate, epoch, emoteReset
+from src.systems.behaviours import moveToTarget, eatTarget, brainValidate, epoch, emoteReset, attackTarget
 from src.systems.growth import growth
 from src.systems.remove_components import updateRemoveComponent, updateRemoveEntity, updateAddComponent, updateSizeEntity
 from src.systems.timer import timerUpdate
@@ -127,7 +127,7 @@ def main():
     pause = UIButton(pygame.Rect(3, 159, 116, 26), "Pause", manager, panel.get_container(), command=swapPause)
     one_step = UIButton(pygame.Rect(3, 185, 116, 26), "One Step", manager, panel.get_container(), command=marchStep)
     fps_slider_label = UILabel(pygame.Rect(3, 211, 116, 26), f"FPS Cap: {constants.FPS}", manager, panel.get_container())
-    fps_slider = UIHorizontalSlider(pygame.Rect(3, 237, 116, 26), constants.FPS, (1, 600), manager, panel.get_container())
+    fps_slider = UIHorizontalSlider(pygame.Rect(3, 237, 116, 26), constants.FPS, (10, 600), manager, panel.get_container())
     zoom_slider = UIHorizontalSlider(pygame.Rect(3, 263, 116, 26), constants.PIXELS_PER_METER, (1, 32), manager, panel.get_container())
 
     running: bool = True
@@ -204,6 +204,7 @@ def main():
                     # Behaviours
                     moveToTarget(coordinator)
                     eatTarget(coordinator)
+                    attackTarget(coordinator)
                 case 1:
                     updateReproduction(coordinator, terrain)
             

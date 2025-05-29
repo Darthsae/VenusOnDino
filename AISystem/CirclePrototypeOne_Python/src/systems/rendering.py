@@ -100,6 +100,9 @@ def renderEmoticons(coordinator: ECSCoordinator, surface: Surface, camera: Point
         elif brain.emoticon == Emoticon.ROAMING:
             emoticon_texture_data: TextureData = constants.boot_coprolite
             emoticon_texture: Surface = pygame.transform.scale_by(emoticon_texture_data.texture, constants.PIXELS_PER_METER / max(emoticon_texture_data.rect.width, emoticon_texture_data.rect.height) * 1.5)
+        elif brain.emoticon == Emoticon.FIGHTING:
+            emoticon_texture_data: TextureData = constants.warfare
+            emoticon_texture: Surface = pygame.transform.scale_by(emoticon_texture_data.texture, constants.PIXELS_PER_METER / max(emoticon_texture_data.rect.width, emoticon_texture_data.rect.height) * 1.5)
         
         
         emoticon_rect = emoticon_texture.get_rect()

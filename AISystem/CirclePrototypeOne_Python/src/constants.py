@@ -39,7 +39,8 @@ species_types: list[Species] = [
         "move_to_target",
         "remove_health",
         "energy",
-        "reproduce"
+        "reproduce",
+        "attack_target"
     ], [
         EvaluatorInstance(2, {
             "threat": [
@@ -80,7 +81,8 @@ species_types: list[Species] = [
         "move_to_target",
         "remove_health",
         "energy",
-        "reproduce"
+        "reproduce",
+        "attack_target"
     ], [
         EvaluatorInstance(2, {
             "threat": [
@@ -112,7 +114,8 @@ species_types: list[Species] = [
         "move_to_target",
         "remove_health",
         "energy",
-        "reproduce"
+        "reproduce",
+        "attack_target"
     ], [
         EvaluatorInstance(2, {
             "threat": [

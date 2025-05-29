@@ -10,11 +10,14 @@ def updateNutrients(coordinator: ECSCoordinator):
         diet_component: DietComponent = coordinator.getComponent(entity_id, constants.DIET_COMPONENT)
         health_component: HealthComponent = coordinator.getComponent(entity_id, constants.HEALTH_COMPONENT)
         change = 0
+        diet_component.crucial = {}
         for nutrient in diet_component.nutrients:
             nutrient.current = max(nutrient.current - nutrient.consume, 0)
             if nutrient.minimum <= nutrient.current <= nutrient.maximum and change >= 0:
                 change += 1
             else:
+                if nutrient.minimum > nutrient.current:
+                    diet_component.crucial[nutrient.nutrient] = False
                 change = min(-1, change - 1)
         health_component.current = min(health_component.current + change, health_component.max)
                 

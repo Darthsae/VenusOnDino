@@ -129,6 +129,8 @@ def main():
     stutter_triple: int = 0
     stutter_thirty: int = 0
 
+    emoticon_blink_accumulator: float = 0
+
     while running:
         #if stutter_thirty == 0:
         #    pr = cProfile.Profile()
@@ -177,6 +179,7 @@ def main():
             match stutter_thirty:
                 case 0:
                     # Senses
+                    emoteReset(coordinator)
                     senseSight(coordinator, terrain)
                 case 10:
                     epoch(coordinator)
@@ -187,8 +190,6 @@ def main():
                 case 20:
                     # Evaluators
                     updateEvaluations(coordinator)
-                case 25:
-                    emoteReset(coordinator)
             
             if stutter_triple == 0:
                 # Behaviours
@@ -233,8 +234,12 @@ def main():
                 renderSight(coordinator, screen, camera, entities)
             if constants.DRAW_SPRITES:
                 renderTextures(coordinator, screen, camera, entities)
-            if constants.DRAW_EMOTES and stutter_thirty < 25:
-                renderEmoticons(coordinator, screen, camera, entities)
+            if constants.DRAW_EMOTES: 
+                if emoticon_blink_accumulator < 1.0:
+                    renderEmoticons(coordinator, screen, camera, entities)
+                emoticon_blink_accumulator += time_delta
+                if emoticon_blink_accumulator > 1.25:
+                    emoticon_blink_accumulator = 0
             if constants.DRAW_DIET:
                 renderBars(coordinator, screen, camera, entities)
 

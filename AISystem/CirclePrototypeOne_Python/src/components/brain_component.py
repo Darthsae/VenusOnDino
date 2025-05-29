@@ -65,3 +65,4 @@ class BrainComponent:
     target_creature: TargetCreature
     state: CreatureState = CreatureState.AWAKE
     emoticon: Emoticon = Emoticon.NONE
+    must_roam: bool = False

@@ -30,12 +30,19 @@ def foodEvaluator(coordinator: ECSCoordinator, entity_id: entity, brain: BrainCo
             for nutrient_type, nutrient_need, nutrient_consumption, nutrient_new_value in listable:
                 #if nutrient_type in [NutrientType.FIBER]:
                 #    print(f"{nutrient_type.name}: {nutrient_need} * {nutrient_consumption} * {nutrient_source.nutrients.get(nutrient_type, 0)} * {((physical_body.size * 0.5) ** 2) * math.pi} = {nutrient_need * nutrient_consumption * nutrient_source.nutrients.get(nutrient_type, 0) * ((physical_body.size * 0.5) ** 2) * math.pi}")
-                if nutrient_new_value < 0:
+                if nutrient_type in diet.crucial:
+                    nutrient_value += 10000 * nutrient_need * nutrient_source.nutrients.get(nutrient_type, 0) * (physical_body.size ** 2) * math.pi
+                    if nutrient_type in nutrient_source.nutrients:
+                        diet.crucial[nutrient_type] = True
+                    continue
+                elif nutrient_new_value < 0:
                     # print(f"{entity_id} {nutrient_type}")
                     nutrient_value = -1
                     break
                 nutrient_value += nutrient_need * nutrient_consumption * nutrient_source.nutrients.get(nutrient_type, 0) * (physical_body.size ** 2) * math.pi
             brain.entities[i].nutrition = nutrient_value
+    
+    brain.must_roam = len(diet.crucial) > 0 and True not in diet.crucial.values()
 
 def sizeThreatEvaluator(coordinator: ECSCoordinator, entity_id: entity, brain: BrainComponent, data: dict[str, Any]):
     physical_body: PhysicalBody = coordinator.getComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT)

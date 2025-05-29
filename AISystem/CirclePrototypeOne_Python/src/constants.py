@@ -5,35 +5,55 @@ from .ai.evaluator import IEvaluator, EvaluatorInstance
 from .ai.evaluators import targetEvaluator, foodEvaluator
 from .components.diet_component import NutrientType, NutrientStat
 from .texture_data import TextureData
+from .components.nutrient_source import NutrientSource
 
 textures: list[TextureData] = []
 
 tile_types: list[TileType] = [
     TileType("Dirt", (168, 84, 0), PhysicalState.SOLID),
-    TileType("Water", (0, 0, 200), PhysicalState.LIQUID),
+    TileType("Water", (0, 0, 200), PhysicalState.LIQUID, [
+        ("nutrient_source", NutrientSource({NutrientType.WATER: 1000}))
+    ]),
     TileType("Air", (255, 255, 255), PhysicalState.GAS)
 ]
 
 species_types: list[Species] = [
-    Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 32, 0, 0, {NutrientType.PROTEIN: 2.5}, [
-        NutrientStat(NutrientType.FIBER, 0.1, 3.0, 0.005, 0.25)
-    ], 1, 0.1, False, [
+    Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 10, 0, 0, {NutrientType.PROTEIN: 2.5}, [
+        NutrientStat(NutrientType.FIBER, 0.1, 30.0, 0.005, 0.25),
+        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.005, 0.25)
+    ], 10, 0.1, False, [
         "brain",
         "sight",
         "diet",
         "health",
         "eat_target",
         "move_to_target",
-        "remove_health"
+        "remove_health",
+        "textured"
     ], [
         EvaluatorInstance(1, {})
     ]),
-    Species("Shrub", (0, 255, 0), -1, 2, 2, 600, 0, 0, 5, 0.001, {NutrientType.FIBER: 25.5}, [], -1, 0, True, [
+    Species("Shrub", (0, 255, 0), 2, 2, 2, 600, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 25.5}, [], -1, 0, True, [
         "health",
         "size_health",
         "growth",
         "remove_health"
-    ], [])
+    ], []),
+    Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0, 0, {NutrientType.PROTEIN: 2.5}, [
+        NutrientStat(NutrientType.PROTEIN, 0.1, 30.0, 0.005, 0.25),
+        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 0.15)
+    ], 10, 0.1, False, [
+        "brain",
+        "sight",
+        "diet",
+        "health",
+        "eat_target",
+        "move_to_target",
+        "remove_health",
+        "textured"
+    ], [
+        EvaluatorInstance(1, {})
+    ]),
 ]
 
 evaluator_types: list[IEvaluator] = [

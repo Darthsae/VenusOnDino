@@ -25,7 +25,7 @@ def renderCircles(coordinator: ECSCoordinator, surface: Surface, camera: Point3D
         if coordinator.hasComponent(entity, constants.SIZE_HEALTH_COMPONENT):
             health = coordinator.getComponent(entity, constants.HEALTH_COMPONENT)
             scaling_factor *= health.current / health.max
-        filled_circle(surface, int(new_position.x), int(new_position.y), int(scaling_factor * constants.PIXELS_PER_METER), constants.species_types[coordinator.getComponent(entity, constants.SPECIES_COMPONENT)].color)
+        filled_circle(surface, int(new_position.x), int(new_position.y), int(scaling_factor * constants.PIXELS_PER_METER), physicalBody.color)
 
 def renderTextures(coordinator: ECSCoordinator, surface: Surface, camera: Point3D, view_size: Point2D, terrain: Terrain):
     entities = terrain.entities.query((camera.scaleBy(1, 1, 0) - terrain.position), (camera.scaleBy(1, 1, 0) + Point3D(view_size.x // constants.PIXELS_PER_METER, view_size.y // constants.PIXELS_PER_METER, terrain.TERRAIN_SIZE * constants.METERS_PER_TILE) - terrain.position))

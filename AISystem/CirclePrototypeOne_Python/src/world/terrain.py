@@ -29,9 +29,21 @@ class Terrain:
     
     def regenerateEntityQuadtree(self, coordinator: ECSCoordinator):
         self.entities: OctreeNode[entity] = OctreeNode[entity](Point3D(Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE, Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE, Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE), Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE)
+        for x in range(Terrain.TERRAIN_SIZE):
+            for y in range(Terrain.TERRAIN_SIZE):
+                column: TileColumn = self.columns[y][x]
+                hot = column.getComponents()
+                if len(hot) > 0:
+                    quran = coordinator.createEntity()
+                    for itex, idex in hot:
+                        coordinator.setComponent(quran, constants.componentPull(itex), idex)
+                    coordinator.setComponent(quran, constants.POSITION_COMPONENT, Point3D((x + 0.5) * constants.METERS_PER_TILE, (y + 0.5) * constants.METERS_PER_TILE, 10))
+                    coordinator.setComponent(quran, constants.PHYSICAL_BODY_COMPONENT, PhysicalBody(100, constants.METERS_PER_TILE / 2))
+        
         for entity_id in coordinator.getEntitiesWithComponent(constants.POSITION_COMPONENT):
             position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
             self.entities.insert(position, entity_id)
+        
 
     def updateDirtyEntityQuadtree(self, coordinator: ECSCoordinator):
         for entity_id in coordinator.getEntitiesWithComponent(constants.DIRTY_POSITION_COMPONENT):

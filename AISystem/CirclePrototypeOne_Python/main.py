@@ -12,7 +12,7 @@ from src.systems.needs import updateNutrients
 from src.systems.evaluations import updateEvaluations
 from src.systems.behaviours import moveToTarget, eatTarget
 from src.systems.growth import growth
-from src.systems.remove_components import updateRemoveComponent
+from src.systems.remove_components import updateRemoveComponent, updateRemoveEntity
 from src import constants
 from src.texture_data import TextureData
 
@@ -46,7 +46,7 @@ def main():
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
 
-    for _ in range(2000):
+    for _ in range(1000):
         terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), random.randint(0, len(constants.species_types) - 1))
 
     
@@ -58,7 +58,8 @@ def main():
 
     constants.textures = [
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Tyrant.png"),
-        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Titan.png")
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Titan.png"),
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Plant.png")
     ]
 
     def swapCircles():
@@ -156,6 +157,7 @@ def main():
             
             terrain.updateDirtyEntityQuadtree(coordinator)
             updateRemoveComponent(coordinator)
+            updateRemoveEntity(coordinator)
             
             stutter_double = not stutter_double
             stutter_triple += 1

@@ -1,0 +1,18 @@
+{
+    "keyframes": {
+        "0": [
+            {
+                "body_part": "lower_arm",
+                "action": "contract",
+                "force": 12
+            }
+        ],
+        "12": [
+            {
+                "body_part": "lower_arm",
+                "action": "hold",
+                "force": 12
+            }
+        ]
+    }
+}

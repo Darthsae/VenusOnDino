@@ -64,7 +64,7 @@ species_types: list[Species] = [
         "remove_health"
     ], [], [
         ("remove_entity", True)
-    ], 0, 0, (4.5, 1, 2, 360, 0, 0.2)),
+    ], 0, 0, (4.5, 1, 1, 360, 0, 0.15)),
     Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0.8, 0, 0, {NutrientType.PROTEIN: 225}, [
         NutrientStat(NutrientType.PROTEIN, 0.1, 300.0, 0.005, 25),
         NutrientStat(NutrientType.WATER, 0.01, 150.0, 0.001, 15)

@@ -108,8 +108,9 @@ def renderEmoticons(coordinator: ECSCoordinator, surface: Surface, camera: Point
         surface.blit(emoticon_texture, emoticon_rect)
 
 def renderBar(surface: Surface, bar: Rect, percent: float, color):
-    surface.fill(color, Rect(bar.topleft, (bar.width * percent, bar.height)))
-    surface.fill((32, 32, 32), Rect((bar.left + bar.width * percent, bar.top), (bar.width * (1 - percent), bar.height)))
+    pixels_for_percent: float = bar.width * percent
+    surface.fill(color, Rect(bar.topleft, (pixels_for_percent, bar.height)))
+    surface.fill((12, 12, 12), Rect((bar.left + pixels_for_percent, bar.top), (bar.width - pixels_for_percent, bar.height)))
 
 def renderBars(coordinator: ECSCoordinator, surface: Surface, camera: Point3D, entities: set[tuple[Point3D, entity]]):
     for position, entity in (entities):

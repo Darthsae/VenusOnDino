@@ -109,7 +109,7 @@ def main():
             swapPause()
 
     manager: UIManager = UIManager((viewport.x, viewport.y))
-    debug_panel = UIPanel((viewport.x - 128, 0, 128, 96), manager=manager)
+    debug_panel = UIPanel((viewport.x - 128, 0, 128, 90), manager=manager)
     position_label = UILabel(pygame.Rect(3, 3, 116, 26), f"Camera: {camera.x}, {camera.y}", manager, debug_panel.get_container())
     fps_label = UILabel(pygame.Rect(3, 29, 116, 26), f"FPS: {clock.get_fps():.2f}", manager, debug_panel.get_container())
     entity_label = UILabel(pygame.Rect(3, 55, 116, 26), f"Entities: {len(coordinator.entities)}", manager, debug_panel.get_container())

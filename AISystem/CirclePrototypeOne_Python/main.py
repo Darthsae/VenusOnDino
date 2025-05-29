@@ -54,8 +54,8 @@ def main():
     terrain.spoof()
 
     species_amounts = [
-        350,
-        600,
+        250,
+        800,
         50
     ]
     for species_index, species_count in enumerate(species_amounts):

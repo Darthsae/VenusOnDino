@@ -2,7 +2,7 @@ from .world.tile import TileType, PhysicalState
 from .species import Species
 from .ecs import component
 from .ai.evaluator import EvaluatorInstance
-from .ai.evaluators import sizeThreatEvaluator, foodEvaluator, componentEvaluator
+from .ai.evaluators import sizeThreatEvaluator, foodEvaluator, componentEvaluator, attackThreatEvaluator
 from .components.diet_component import NutrientType, NutrientStat
 from .texture_data import TextureData
 from .components.nutrient_source import NutrientSource
@@ -47,6 +47,7 @@ species_types: list[Species] = [
                 "eat_target"
             ]
         }),
+        EvaluatorInstance(3, {}),
         EvaluatorInstance(0, {}),
         EvaluatorInstance(1, {})
     ], [
@@ -89,6 +90,7 @@ species_types: list[Species] = [
                 "eat_target"
             ]
         }),
+        EvaluatorInstance(3, {}),
         EvaluatorInstance(0, {}),
         EvaluatorInstance(1, {})
     ], [
@@ -122,6 +124,7 @@ species_types: list[Species] = [
                 "eat_target"
             ]
         }),
+        EvaluatorInstance(3, {}),
         EvaluatorInstance(0, {}),
         EvaluatorInstance(1, {})
     ], [
@@ -140,7 +143,8 @@ species_types: list[Species] = [
 evaluator_types: list = [
     sizeThreatEvaluator,
     foodEvaluator,
-    componentEvaluator
+    componentEvaluator,
+    attackThreatEvaluator
 ]
 
 METERS_PER_TILE: int = 2

@@ -4,6 +4,8 @@ from ..components.brain_component import BrainComponent
 from ..components.diet_component import DietComponent
 from ..components.nutrient_source import NutrientSource, NutrientType
 from ..components.physical_body import PhysicalBody
+from ..components.attack_target_component import AttackTargetComponent
+from ..components.health_component import HealthComponent
 #from ..world.terrain import Terrain
 from .. import constants
 import math
@@ -49,6 +51,12 @@ def sizeThreatEvaluator(coordinator: ECSCoordinator, entity_id: entity, brain: B
     for i, entity_instance in enumerate(brain.entities):
         if brain.entities[i].threat != None:
             brain.entities[i].threat += (coordinator.getComponent(entity_instance.id, constants.PHYSICAL_BODY_COMPONENT).size - physical_body.size) * data.get("modifier", 1.0) * 10000
+
+def attackThreatEvaluator(coordinator: ECSCoordinator, entity_id: entity, brain: BrainComponent, data: dict[str, Any]):
+    health: HealthComponent = coordinator.getComponent(entity_id, constants.HEALTH_COMPONENT)
+    for i, entity_instance in enumerate(brain.entities):
+        if brain.entities[i].threat != None and coordinator.hasComponent(brain.entities[i].id, constants.ATTACK_TARGET_COMPONENT):
+            brain.entities[i].threat += (coordinator.getComponent(brain.entities[i].id, constants.ATTACK_TARGET_COMPONENT).damage / health.current) * data.get("modifier", 1.0) * 10000
 
 def componentEvaluator(coordinator: ECSCoordinator, entity_id: entity, brain: BrainComponent, data: dict[str, Any]):
     components: list[component] = map(constants.componentPull, data["threat"])

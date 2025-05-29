@@ -1,11 +1,10 @@
 import pygame, pygame_gui, random, io, pstats, cProfile
 from pygame_gui import UIManager
-from pygame_gui.elements import UILabel, UIPanel, UIProgressBar, UIHorizontalSlider, UIButton
+from pygame_gui.elements import UILabel, UIPanel, UIHorizontalSlider, UIButton
 from src.world.terrain import Terrain
 from src.position import Point2D, Point3D
 from src.ecs import ECSCoordinator
-from src.systems.rendering import renderCircles, renderTextures, renderTerrainTextures, renderSight, renderEmoticons
-from src.systems.debug import randomMovement
+from src.systems.rendering import renderCircles, renderTextures, renderTerrainTextures, renderSight, renderEmoticons, renderBars
 from src.systems.senses import senseSight
 from src.systems.memory import workingMemory, assosciativeMemory
 from src.systems.needs import updateNutrients, updateEnergy, damagedComponent
@@ -52,14 +51,14 @@ def main():
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
 
-    tpes = [
+    species_amounts = [
         350,
         600,
         50
     ]
-    for typist, a in enumerate(tpes):
-        for _ in range(a):
-            terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), typist)
+    for species_index, species_count in enumerate(species_amounts):
+        for _ in range(species_count):
+            terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), species_index)
 
     
     terrain.regenerateEntityQuadtree(coordinator)
@@ -95,6 +94,12 @@ def main():
 
     def swapSight():
         constants.DRAW_SIGHT = not constants.DRAW_SIGHT
+
+    def swapEmotes():
+        constants.DRAW_EMOTES = not constants.DRAW_EMOTES
+
+    def swapDiet():
+        constants.DRAW_DIET = not constants.DRAW_DIET
         
     def marchStep():
         if not constants.RUNNING:
@@ -110,11 +115,13 @@ def main():
     debug_sprites = UIButton(pygame.Rect(3, 29, 116, 26), "Debug Sprites", manager, panel.get_container(), command=swapSprites)
     debug_terrain = UIButton(pygame.Rect(3, 55, 116, 26), "Debug Terrain", manager, panel.get_container(), command=swapTerrain)
     debug_sight = UIButton(pygame.Rect(3, 81, 116, 26), "Debug Sight", manager, panel.get_container(), command=swapSight)
-    pause = UIButton(pygame.Rect(3, 107, 116, 26), "Pause", manager, panel.get_container(), command=swapPause)
-    one_step = UIButton(pygame.Rect(3, 133, 116, 26), "One Step", manager, panel.get_container(), command=marchStep)
-    fps_slider_label = UILabel(pygame.Rect(3, 159, 116, 26), f"FPS Cap: {constants.FPS}", manager, panel.get_container())
-    fps_slider = UIHorizontalSlider(pygame.Rect(3, 182, 116, 26), constants.FPS, (1, 600), manager, panel.get_container())
-    moo_slider = UIHorizontalSlider(pygame.Rect(3, 208, 116, 26), constants.PIXELS_PER_METER, (1, 32), manager, panel.get_container())
+    debug_emotes = UIButton(pygame.Rect(3, 107, 116, 26), "Debug Emotes", manager, panel.get_container(), command=swapEmotes)
+    debug_diet = UIButton(pygame.Rect(3, 133, 116, 26), "Debug Diet", manager, panel.get_container(), command=swapDiet)
+    pause = UIButton(pygame.Rect(3, 159, 116, 26), "Pause", manager, panel.get_container(), command=swapPause)
+    one_step = UIButton(pygame.Rect(3, 185, 116, 26), "One Step", manager, panel.get_container(), command=marchStep)
+    fps_slider_label = UILabel(pygame.Rect(3, 211, 116, 26), f"FPS Cap: {constants.FPS}", manager, panel.get_container())
+    fps_slider = UIHorizontalSlider(pygame.Rect(3, 237, 116, 26), constants.FPS, (1, 600), manager, panel.get_container())
+    zoom_slider = UIHorizontalSlider(pygame.Rect(3, 263, 116, 26), constants.PIXELS_PER_METER, (1, 32), manager, panel.get_container())
 
     running: bool = True
 
@@ -153,8 +160,8 @@ def main():
                     if event.ui_element == fps_slider:
                         constants.FPS = fps_slider.get_current_value()
                         fps_slider_label.set_text(f"FPS Cap: {constants.FPS}")
-                    elif event.ui_element == moo_slider:
-                        constants.PIXELS_PER_METER = moo_slider.get_current_value()
+                    elif event.ui_element == zoom_slider:
+                        constants.PIXELS_PER_METER = zoom_slider.get_current_value()
                         constants.PIXELS_PER_TILE = constants.PIXELS_PER_METER * constants.METERS_PER_TILE
             
             manager.process_events(event)
@@ -172,20 +179,20 @@ def main():
                     # Senses
                     senseSight(coordinator, terrain)
                 case 10:
-                    epoch(coordinator, terrain)
+                    epoch(coordinator)
                     damagedComponent(coordinator)
                     # Memory
                     workingMemory(coordinator)
                     assosciativeMemory(coordinator)
                 case 20:
                     # Evaluators
-                    updateEvaluations(coordinator, terrain)
+                    updateEvaluations(coordinator)
                 case 25:
                     emoteReset(coordinator)
             
             if stutter_triple == 0:
                 # Behaviours
-                moveToTarget(coordinator, terrain)
+                moveToTarget(coordinator)
                 eatTarget(coordinator)
             
             updateAddComponent(coordinator)
@@ -215,18 +222,21 @@ def main():
 
         # Rendering
         screen.fill((32, 48, 64))
-        if constants.DRAW_TERRAIN or constants.DRAW_CIRCLES or constants.DRAW_SIGHT or constants.DRAW_SPRITES:
-            entities = {tup for tup in terrain.entities.query((camera.scaleBy(1, 1, 0) - terrain.position), (camera.scaleBy(1, 1, 0) + Point3D(viewport.x // constants.PIXELS_PER_METER, viewport.y // constants.PIXELS_PER_METER, terrain.TERRAIN_SIZE * constants.METERS_PER_TILE) - terrain.position)) if tup[1] in coordinator.entities}
-            if constants.DRAW_TERRAIN:
-                renderTerrainTextures(coordinator, screen, camera, viewport, terrain)
+        if constants.DRAW_TERRAIN:
+                renderTerrainTextures(screen, camera, viewport, terrain)
+        if constants.DRAW_EMOTES or constants.DRAW_DIET or constants.DRAW_SPRITES or constants.DRAW_SIGHT or constants.DRAW_CIRCLES:
+            entities = terrain.entities.query((camera.scaleBy(1, 1, 0) - terrain.position), (camera.scaleBy(1, 1, 0) + Point3D(viewport.x // constants.PIXELS_PER_METER, viewport.y // constants.PIXELS_PER_METER, terrain.TERRAIN_SIZE * constants.METERS_PER_TILE) - terrain.position))
+            
             if constants.DRAW_CIRCLES:
-                renderCircles(coordinator, screen, camera, viewport, terrain, entities)
+                renderCircles(coordinator, screen, camera, entities)
             if constants.DRAW_SIGHT:
-                renderSight(coordinator, screen, camera, viewport, terrain, entities)
+                renderSight(coordinator, screen, camera, entities)
             if constants.DRAW_SPRITES:
-                renderTextures(coordinator, screen, camera, viewport, terrain, entities)
-                if stutter_thirty < 25:
-                    renderEmoticons(coordinator, screen, camera, viewport, terrain, entities)
+                renderTextures(coordinator, screen, camera, entities)
+            if constants.DRAW_EMOTES and stutter_thirty < 25:
+                renderEmoticons(coordinator, screen, camera, entities)
+            if constants.DRAW_DIET:
+                renderBars(coordinator, screen, camera, entities)
 
         manager.draw_ui(screen)
 

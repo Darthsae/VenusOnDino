@@ -56,7 +56,7 @@ class OctreeNode[T]:
                     y = int(position2.y > self.position.y)
                     z = int(position2.z > self.position.z)
                     self.children[x + y * 2 + z * 4].insert(position2, occupant)
-                self.occupants = {}
+                self.occupants.clear()
                 return
         else:
             x = int(position.x > self.position.x)
@@ -72,7 +72,7 @@ class OctreeNode[T]:
         elif self.children[0] == None:
             return self.occupants.pop(position, None) != None
         else:
-            for child in self.children:
-                if child.pop(position):
-                    return True
-            return False
+            x = int(position.x > self.position.x)
+            y = int(position.y > self.position.y)
+            z = int(position.z > self.position.z)
+            return self.children[x + y * 2 + z * 4].pop(position)

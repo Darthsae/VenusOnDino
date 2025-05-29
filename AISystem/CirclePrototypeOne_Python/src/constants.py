@@ -1,7 +1,7 @@
 from .world.tile import TileType, PhysicalState
 from .species import Species
 from .ecs import component
-from .ai.evaluator import IEvaluator, EvaluatorInstance
+from .ai.evaluator import EvaluatorInstance
 from .ai.evaluators import sizeThreatEvaluator, foodEvaluator, componentEvaluator
 from .components.diet_component import NutrientType, NutrientStat
 from .texture_data import TextureData
@@ -20,13 +20,13 @@ tile_types: list[TileType] = [
     TileType("Dirt", (236, 184, 138), TextureData.load("../../Assets/Textures/PixelArt/TopDown/Dirt.png"), PhysicalState.SOLID, [
     ]),
     TileType("Water", (36, 150, 210), TextureData.load("../../Assets/Textures/PixelArt/TopDown/Water.png"), PhysicalState.LIQUID, [
-        ("nutrient_source", NutrientSource({NutrientType.WATER: 1000})),
+        ("nutrient_source", NutrientSource({NutrientType.WATER: 200})),
     ]),
     TileType("Air", (255, 255, 255), None, PhysicalState.GAS)
 ]
 
 species_types: list[Species] = [
-    Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 10, 0.25, 0, 0, {NutrientType.PROTEIN: 200.5}, [
+    Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 10, 0.25, 0, 0, {NutrientType.PROTEIN: 200}, [
         NutrientStat(NutrientType.FIBER, 0.1, 3.0, 0.0025, 0.25),
         NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.0001, 30.0)
     ], 10, 0.1, False, [
@@ -57,7 +57,7 @@ species_types: list[Species] = [
             ("textured", TexturedComponent(4))
         ]))
     ], 1200, 1200),
-    Species("Shrub", (0, 255, 0), 2, 2, 2, 600, 0, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 25.5}, [], -1, 0, True, [
+    Species("Shrub", (0, 255, 0), 2, 2, 2, 600, 0, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 125}, [], -1, 0, True, [
         "health",
         "size_health",
         "growth",
@@ -65,7 +65,7 @@ species_types: list[Species] = [
     ], [], [
         ("remove_entity", True)
     ], 0, 0),
-    Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0.8, 0, 0, {NutrientType.PROTEIN: 2.5}, [
+    Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0.8, 0, 0, {NutrientType.PROTEIN: 225}, [
         NutrientStat(NutrientType.PROTEIN, 0.1, 300.0, 0.005, 0.15),
         NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 0.15)
     ], 10, 0.1, False, [
@@ -98,7 +98,7 @@ species_types: list[Species] = [
     ], 6000, 6000),
 ]
 
-evaluator_types: list[IEvaluator] = [
+evaluator_types: list = [
     sizeThreatEvaluator,
     foodEvaluator,
     componentEvaluator
@@ -188,6 +188,8 @@ DRAW_CIRCLES: bool = False
 DRAW_SPRITES: bool = True
 DRAW_TERRAIN: bool = True
 DRAW_SIGHT: bool = False
+DRAW_EMOTES: bool = True
+DRAW_DIET: bool = True
 RUNNING: bool = True
 TAKE_STEP: bool = False
 

@@ -6,9 +6,8 @@ from ..ecs import ECSCoordinator, entity
 from ..components.physical_body import PhysicalBody
 from ..components.textured_component import TexturedComponent
 from ..components.health_component import HealthComponent
-from ..components.brain_component import BrainComponent, EvaluatorInstance, TargetPosition, PositionContext, TargetCreature
+from ..components.brain_component import BrainComponent, TargetPosition, PositionContext, TargetCreature
 from ..components.diet_component import DietComponent
-from ..components.memory_component import MemoryComponent
 from ..components.sight_sensor import SightSensor
 from ..components.move_to_target_component import MoveToTargetComponent
 from ..components.nutrient_source import NutrientSource
@@ -33,13 +32,13 @@ class Terrain:
         for x in range(Terrain.TERRAIN_SIZE):
             for y in range(Terrain.TERRAIN_SIZE):
                 column: TileColumn = self.columns[y][x]
-                hot = column.getComponents()
-                if len(hot) > 0:
-                    quran = coordinator.createEntity()
-                    for itex, idex in hot:
-                        coordinator.setComponent(quran, constants.componentPull(itex), idex)
-                    coordinator.setComponent(quran, constants.POSITION_COMPONENT, Point3D((x + 0.5) * constants.METERS_PER_TILE, (y + 0.5) * constants.METERS_PER_TILE, 2))
-                    coordinator.setComponent(quran, constants.PHYSICAL_BODY_COMPONENT, PhysicalBody(100, constants.METERS_PER_TILE / 2))
+                tile_components = column.getComponents()
+                if len(tile_components) > 0:
+                    tile_entity = coordinator.createEntity()
+                    for component_type, component_data in tile_components:
+                        coordinator.setComponent(tile_entity, constants.componentPull(component_type), component_data)
+                    coordinator.setComponent(tile_entity, constants.POSITION_COMPONENT, Point3D((x + 0.5) * constants.METERS_PER_TILE, (y + 0.5) * constants.METERS_PER_TILE, 2))
+                    coordinator.setComponent(tile_entity, constants.PHYSICAL_BODY_COMPONENT, PhysicalBody(100, constants.METERS_PER_TILE / 2))
         
         for entity_id in coordinator.getEntitiesWithComponent(constants.POSITION_COMPONENT):
             position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
@@ -49,15 +48,20 @@ class Terrain:
     def updateDirtyEntityQuadtree(self, coordinator: ECSCoordinator):
         for entity_id in coordinator.getEntitiesWithComponent(constants.DIRTY_POSITION_COMPONENT):
             old_position: Point3D = coordinator.getComponent(entity_id, constants.DIRTY_POSITION_COMPONENT)
-            position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
+            new_position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
             coordinator.removeComponents(entity_id, {constants.DIRTY_POSITION_COMPONENT})
             self.entities.pop(old_position)
-            self.entities.insert(position, entity_id)
+            #print(f"Moved {entity_id} from {old_position} to {new_position}")
+            self.entities.insert(new_position, entity_id)
 
         for entity_id in coordinator.getEntitiesWithComponent(constants.REMOVE_ENTITY_COMPONENT) & coordinator.getEntitiesWithComponent(constants.POSITION_COMPONENT):
             position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
-            self.entities.pop(position)
-
+            #print(f"Removed {entity_id} from quadtree at {position} and it was a {boba}, nearby are: {self.entities.query(position - Point3D(1, 1, 1), position + Point3D(1, 1, 1))}")
+            if not self.entities.pop(position):
+                for position_next, entity_id_iter in self.entities.query(position - Point3D(1, 1, 1), position + Point3D(1, 1, 1)):
+                    if entity_id_iter == entity_id:
+                        self.entities.pop(position_next)
+                        break
     def spoof(self):
         for y in range(Terrain.TERRAIN_SIZE):
             for x in range(Terrain.TERRAIN_SIZE):

@@ -55,7 +55,7 @@ def main():
 
     species_amounts = [
         250,
-        800,
+        1200,
         50
     ]
     for species_index, species_count in enumerate(species_amounts):

@@ -3,7 +3,7 @@ from .components.diet_component import NutrientType, NutrientStat
 from typing import Any
 
 class Species:
-    def __init__(self, name: str, color, texture: int, size: float, mass: float, max_life: int, speed: float, sight: float, sight_factor: float, growth_max_amount: float, growth_amount: float, nutrients: dict[NutrientType, float], diet: list[NutrientStat], eats: int, eat_amount: float, size_health: bool, remover: list[str], evaluators: list[EvaluatorInstance], adder: list[tuple[str, Any]], energy_max: int, energy: int, reproduction: None|tuple[float, int, int, int, int, float, bool] = None):
+    def __init__(self, name: str, color, texture: int, size: float, mass: float, max_life: int, speed: float, sight: float, sight_factor: float, growth_max_amount: float, growth_amount: float, nutrients: dict[NutrientType, float], diet: list[NutrientStat], eats: int, eat_amount: float, size_health: bool, remover: list[str], evaluators: list[EvaluatorInstance], adder: list[tuple[str, Any]], energy_max: int, energy: int, reproduction: None|tuple[float, int, int, int, int, int, float, bool] = None):
         self.name = name
         self.color = color
         self.texture = texture

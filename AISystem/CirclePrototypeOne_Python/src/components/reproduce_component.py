@@ -7,6 +7,7 @@ class ReproduceComponent:
     species: int
     count: int
     delay: int 
+    cooldown: int 
     energy_use: int
     chance: float
     others: bool

@@ -4,6 +4,7 @@ from ..position import Point3D
 from ..components.energy_component import EnergyComponent
 from ..components.reproduce_component import ReproduceComponent
 from ..components.physical_body import PhysicalBody
+from ..components.brain_component import BrainComponent, CreatureState
 from .. import constants
 import random
 
@@ -21,6 +22,11 @@ def updateReproduction(coordinator: ECSCoordinator, terrain: Terrain):
                 else:
                     continue
 
+            if coordinator.hasComponent(entity_id, constants.BRAIN_COMPONENT):
+                brain: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
+                if brain.state != CreatureState.AWAKE:
+                    continue
+
             position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
             if reproduce_component.others:
                 physical_body: PhysicalBody = coordinator.getComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT)
@@ -35,7 +41,7 @@ def updateReproduction(coordinator: ECSCoordinator, terrain: Terrain):
                     continue
 
             if reproduce_component.current >= reproduce_component.delay:
-                reproduce_component.delay = 0
+                reproduce_component.delay = reproduce_component.cooldown
                 for _ in range(random.randint(0, reproduce_component.count)):
                     pos: Point3D = position + Point3D(random.uniform(-reproduce_component.offset, reproduce_component.offset), random.uniform(-reproduce_component.offset, reproduce_component.offset), 0)
                     coordinator.setComponent(terrain.addEntity(coordinator, pos, reproduce_component.species), constants.DIRTY_POSITION_COMPONENT, pos)

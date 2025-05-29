@@ -27,8 +27,8 @@ tile_types: list[TileType] = [
 
 species_types: list[Species] = [
     Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 10, 0.25, 0, 0, {NutrientType.PROTEIN: 200}, [
-        NutrientStat(NutrientType.FIBER, 0.1, 3.0, 0.0025, 0.25),
-        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.0001, 30.0)
+        NutrientStat(NutrientType.FIBER, 0.1, 12.0, 0.015, 0.25),
+        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 30.0)
     ], 10, 0.1, False, [
         "brain",
         "sight",
@@ -56,7 +56,7 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 1200, 1200, None),
+    ], 1200, 1200, (1.5, 0, 1, 60, 25, 0.05, True)),
     Species("Shrub", (0, 255, 0), 2, 2, 2, 600, 0, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 125}, [], -1, 0, True, [
         "health",
         "size_health",
@@ -64,7 +64,7 @@ species_types: list[Species] = [
         "remove_health"
     ], [], [
         ("remove_entity", True)
-    ], 0, 0, (4.5, 1, 1, 360, 0, 0.15)),
+    ], 0, 0, (4.5, 1, 1, 300, 0, 0.15, False)),
     Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0.8, 0, 0, {NutrientType.PROTEIN: 225}, [
         NutrientStat(NutrientType.PROTEIN, 0.1, 300.0, 0.005, 25),
         NutrientStat(NutrientType.WATER, 0.01, 150.0, 0.001, 15)

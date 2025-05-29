@@ -100,5 +100,5 @@ class Terrain:
             coordinator.setComponent(new_entity, constants.ENERGY_COMPONENT, EnergyComponent(constants.species_types[species].energy, constants.species_types[species].energy_max))
         if constants.species_types[species].reproduction != None:
             reproduction_data = constants.species_types[species].reproduction
-            coordinator.setComponent(new_entity, constants.REPRODUCE_COMPONENT, ReproduceComponent(reproduction_data[0], reproduction_data[1], reproduction_data[2], reproduction_data[3], reproduction_data[4], reproduction_data[5]))
+            coordinator.setComponent(new_entity, constants.REPRODUCE_COMPONENT, ReproduceComponent(reproduction_data[0], reproduction_data[1], reproduction_data[2], reproduction_data[3], reproduction_data[4], reproduction_data[5], reproduction_data[6]))
         return new_entity

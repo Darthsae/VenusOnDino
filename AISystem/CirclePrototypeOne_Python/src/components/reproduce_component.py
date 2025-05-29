@@ -9,4 +9,5 @@ class ReproduceComponent:
     delay: int 
     energy_use: int
     chance: float
+    others: bool
     current: int = 0

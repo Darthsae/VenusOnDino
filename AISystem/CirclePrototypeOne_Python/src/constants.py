@@ -14,6 +14,7 @@ textures: list[TextureData] = []
 hungy: TextureData
 sleepy: TextureData
 thirst_trap: TextureData
+boot_coprolite: TextureData
 
 tile_types: list[TileType] = [
     TileType("Dirt", (236, 184, 138), TextureData.load("../../Assets/Textures/PixelArt/TopDown/Dirt.png"), PhysicalState.SOLID, [

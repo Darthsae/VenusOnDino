@@ -20,8 +20,8 @@ def renderTerrain(coordinator: ECSCoordinator, surface: Surface, camera: Point3D
 def renderTerrainTextures(coordinator: ECSCoordinator, surface: Surface, camera: Point3D, view_size: Point2D, terrain: Terrain):
     top_left: Point2D = camera.asPoint2D() // constants.METERS_PER_TILE - terrain.position
     bottom_right: Point2D = (top_left - terrain.position + view_size // constants.PIXELS_PER_TILE)
-    for y in range(int(max(top_left.y - 1, 0)), int(min(bottom_right.y + 1, Terrain.TERRAIN_SIZE))):
-        for x in range(int(max(top_left.x - 1, 0)), int(min(bottom_right.x + 1, Terrain.TERRAIN_SIZE))):
+    for y in range(int(max(top_left.y - 1, 0)), int(min(bottom_right.y + 2, Terrain.TERRAIN_SIZE))):
+        for x in range(int(max(top_left.x - 1, 0)), int(min(bottom_right.x + 2, Terrain.TERRAIN_SIZE))):
             new_position = Point2D((x - camera.x / constants.METERS_PER_TILE) * constants.PIXELS_PER_TILE, (y - camera.y / constants.METERS_PER_TILE) * constants.PIXELS_PER_TILE)
             texture: TextureData = constants.tile_types[terrain.columns[y][x].topLayer().tile_type].texture
             scaling_factor: float = constants.PIXELS_PER_TILE / max(texture.rect.width, texture.rect.height)
@@ -98,6 +98,9 @@ def renderEmoticons(coordinator: ECSCoordinator, surface: Surface, camera: Point
             serf: Surface = pygame.transform.scale_by(applicable.texture, constants.PIXELS_PER_METER / max(applicable.rect.width, applicable.rect.height) * 1.5)
         elif brain.emoticon == Emoticon.DRINKING:
             applicable: TextureData = constants.thirst_trap
+            serf: Surface = pygame.transform.scale_by(applicable.texture, constants.PIXELS_PER_METER / max(applicable.rect.width, applicable.rect.height) * 1.5)
+        elif brain.emoticon == Emoticon.ROAMING:
+            applicable: TextureData = constants.boot_coprolite
             serf: Surface = pygame.transform.scale_by(applicable.texture, constants.PIXELS_PER_METER / max(applicable.rect.width, applicable.rect.height) * 1.5)
         
         

@@ -35,9 +35,11 @@ def updateEvaluations(coordinator: ECSCoordinator, terrain: Terrain):
                 else:
                     brain_component.target_creature.valid = False
                     brain_component.target_position.setPosition(pos + Point3D(randint(-12, 12), randint(-12, 12), 5), PositionContext.ROAM)
+                    brain_component.emoticon = Emoticon.ROAMING
             else:
                 brain_component.target_creature.valid = False
                 brain_component.target_position.setPosition(pos + Point3D(randint(-12, 12), randint(-12, 12), 5), PositionContext.ROAM)
+                brain_component.emoticon = Emoticon.ROAMING
         elif brain_component.state == CreatureState.SLEEPING:
             energon: EnergyComponent = coordinator.getComponent(entity_id, constants.ENERGY_COMPONENT)
 

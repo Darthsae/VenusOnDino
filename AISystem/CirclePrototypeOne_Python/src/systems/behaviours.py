@@ -56,10 +56,10 @@ def eatTarget(coordinator: ECSCoordinator):
                     coordinator.setComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT, physical_body)
                 diet: DietComponent = coordinator.getComponent(entity_id, constants.DIET_COMPONENT)
                 nutrition: NutrientSource = coordinator.getComponent(brain_component.target_creature.creature, constants.NUTRIENT_SOURCE_COMPONENT)
-                if constants.NutrientType.PROTEIN in nutrition.nutrients and len(nutrition.nutrients) == 1:
+                if constants.NutrientType.WATER in nutrition.nutrients and len(nutrition.nutrients) == 1:
                     brain_component.emoticon = Emoticon.DRINKING
                 else:
-                    brain_component.emoticon = Emoticon.NONE
+                    brain_component.emoticon = Emoticon.EATING
                 coordinator.setComponent(entity_id, constants.DIET_COMPONENT, diet.updated(nutrition, eat_target.amount))
                 if coordinator.hasComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT):
                     health: HealthComponent = coordinator.getComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT)

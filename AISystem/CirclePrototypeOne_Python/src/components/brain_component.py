@@ -55,6 +55,7 @@ class Emoticon(Enum):
     NONE = 0
     EATING = 1
     DRINKING = 2
+    ROAMING = 3
 
 @dataclass
 class BrainComponent:

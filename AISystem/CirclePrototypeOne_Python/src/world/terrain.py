@@ -37,7 +37,7 @@ class Terrain:
                     quran = coordinator.createEntity()
                     for itex, idex in hot:
                         coordinator.setComponent(quran, constants.componentPull(itex), idex)
-                    coordinator.setComponent(quran, constants.POSITION_COMPONENT, Point3D((x + 0.5) * constants.METERS_PER_TILE, (y + 0.5) * constants.METERS_PER_TILE, 5))
+                    coordinator.setComponent(quran, constants.POSITION_COMPONENT, Point3D((x + 0.5) * constants.METERS_PER_TILE, (y + 0.5) * constants.METERS_PER_TILE, 2))
                     coordinator.setComponent(quran, constants.PHYSICAL_BODY_COMPONENT, PhysicalBody(100, constants.METERS_PER_TILE / 2))
         
         for entity_id in coordinator.getEntitiesWithComponent(constants.POSITION_COMPONENT):

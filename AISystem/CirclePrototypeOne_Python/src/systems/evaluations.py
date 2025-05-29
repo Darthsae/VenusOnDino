@@ -16,7 +16,7 @@ def updateEvaluations(coordinator: ECSCoordinator, terrain: Terrain):
             #for wacko in brain_component.entities:
                 #print(f"{wacko.nutritionByDistance(pos)} - {wacko.threatByDistance(pos)} = {wacko.nutritionByDistance(pos) - wacko.threatByDistance(pos)}")
             sortation = sorted(brain_component.entities, key=lambda x: x.nutritionByDistance(pos) - x.threatByDistance(pos), reverse=True)[0]
-            if sortation.nutrition > 0:
+            if sortation.nutrition > 10000:
                 #print(sortation.nutrition)
                 brain_component.target_creature.setCreature(sortation.id)
                 brain_component.target_position.setPosition(coordinator.getComponent(sortation.id, constants.POSITION_COMPONENT), PositionContext.ROAM)

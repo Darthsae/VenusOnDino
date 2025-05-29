@@ -3,8 +3,8 @@ from numbers import Complex
 
 @dataclass(unsafe_hash=True)
 class Point2D:
-    x: int
-    y: int
+    x: float
+    y: float
 
     def asPoint3D(self):
         return Point3D(self.x, self.y, 0)
@@ -28,12 +28,12 @@ class Point2D:
 
 @dataclass(unsafe_hash=True)
 class Point3D:
-    x: int
-    y: int
-    z: int
+    x: float
+    y: float
+    z: float
 
     @classmethod
-    def fromUniform(cls, value: int):
+    def fromUniform(cls, value: float):
         return Point3D(value, value, value)
 
     def asPoint2D(self):

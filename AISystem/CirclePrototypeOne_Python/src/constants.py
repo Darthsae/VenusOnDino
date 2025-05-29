@@ -22,12 +22,11 @@ species_types: list[Species] = [
     Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 10, 0, 0, {NutrientType.PROTEIN: 200.5}, [
         NutrientStat(NutrientType.FIBER, 0.1, 30.0, 0.005, 0.25),
         NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.005, 0.25)
-    ], 10, 0.1, True, [
+    ], 10, 0.1, False, [
         "brain",
         "sight",
         "diet",
         "health",
-        "size_health",
         "eat_target",
         "move_to_target",
         "remove_health"
@@ -40,7 +39,12 @@ species_types: list[Species] = [
         EvaluatorInstance(0, {}),
         EvaluatorInstance(1, {})
     ], [
-        ("textured", TexturedComponent(3))
+        ("textured", TexturedComponent(3)),
+        ("physical_buzz", ([
+            "textured"
+        ], [
+            ("remove_entity", True)
+        ]))
     ]),
     Species("Shrub", (0, 255, 0), 2, 2, 2, 600, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 25.5}, [], -1, 0, True, [
         "health",
@@ -51,14 +55,13 @@ species_types: list[Species] = [
         ("remove_entity", True)
     ]),
     Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0, 0, {NutrientType.PROTEIN: 2.5}, [
-        NutrientStat(NutrientType.PROTEIN, 0.1, 30000.0, 0.005, 0.15),
+        NutrientStat(NutrientType.PROTEIN, 0.1, 300.0, 0.005, 0.15),
         NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 0.15)
-    ], 10, 0.1, True, [
+    ], 10, 0.1, False, [
         "brain",
         "sight",
         "diet",
         "health",
-        "size_health",
         "eat_target",
         "move_to_target",
         "remove_health"
@@ -71,7 +74,12 @@ species_types: list[Species] = [
         EvaluatorInstance(0, {}),
         EvaluatorInstance(1, {})
     ], [
-        ("textured", TexturedComponent(3))
+        ("textured", TexturedComponent(3)),
+        ("physical_buzz", ([
+            "textured"
+        ], [
+            ("remove_entity", True)
+        ]))
     ]),
 ]
 
@@ -127,6 +135,8 @@ def componentPull(id: str):
             return DIRTY_POSITION_COMPONENT
         case "add_health":
             return ADD_HEALTH_COMPONENT
+        case "physical_buzz":
+            return PHYSICAL_BUZZ
 
 POSITION_COMPONENT: component
 PHYSICAL_BODY_COMPONENT: component
@@ -148,10 +158,12 @@ REMOVE_HEALTH_COMPONENT: component
 REMOVE_ENTITY_COMPONENT: component
 DIRTY_POSITION_COMPONENT: component
 ADD_HEALTH_COMPONENT: component
+PHYSICAL_BUZZ: component
 
 DRAW_CIRCLES: bool = False
 DRAW_SPRITES: bool = True
 DRAW_TERRAIN: bool = True
+DRAW_SIGHT: bool = False
 RUNNING: bool = True
 TAKE_STEP: bool = False
 

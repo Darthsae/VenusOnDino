@@ -1,10 +1,12 @@
 from .evaluator import ECSCoordinator, entity, Any
 from ..ecs import component
 from ..components.brain_component import BrainComponent, PositionContext
-from ..components.diet_component import DietComponent
+from ..components.diet_component import DietComponent, NutrientType
+from ..components.nutrient_source import NutrientSource
 from ..components.physical_body import PhysicalBody
 from .. import constants
 from ..position import Point3D
+import math
 
 #def targetEvaluator(coordinator: ECSCoordinator, entity_id: entity, terrain: "Terrain", data: dict[str, Any]):
 #    brain: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
@@ -20,10 +22,16 @@ def foodEvaluator(coordinator: ECSCoordinator, entity_id: entity, terrain: "Terr
     if coordinator.hasComponent(entity_id, constants.EAT_TARGET_COMPONENT):
         amount = coordinator.getComponent(entity_id, constants.EAT_TARGET_COMPONENT).amount
         #print(amount)
+
     listable = diet.orderedStats(amount)
     for i, entity_eval in enumerate(brain.entities):
         if coordinator.hasComponent(entity_eval.id, constants.NUTRIENT_SOURCE_COMPONENT):
-            brain.entities[i].nutrition = coordinator.getComponent(entity_eval.id, constants.NUTRIENT_SOURCE_COMPONENT).worthForNeeds(listable)
+            nutrient_source: NutrientSource = coordinator.getComponent(entity_eval.id, constants.NUTRIENT_SOURCE_COMPONENT)
+            physical_body: PhysicalBody = coordinator.getComponent(entity_eval.id, constants.PHYSICAL_BODY_COMPONENT)
+            evog = 0.0
+            for entry, antry, ontry in listable:
+                evog += antry * ontry * nutrient_source.nutrients.get(entry, 0) * ((physical_body.size * 0.5) ** 2) * math.pi
+            brain.entities[i].nutrition = evog
 
 def sizeThreatEvaluator(coordinator: ECSCoordinator, entity_id: entity, terrain: "Terrain", data: dict[str, Any]):
     brain: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)

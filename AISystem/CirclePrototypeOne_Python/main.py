@@ -4,15 +4,15 @@ from pygame_gui.elements import UILabel, UIPanel, UIProgressBar, UIHorizontalSli
 from src.world.terrain import Terrain
 from src.position import Point2D, Point3D
 from src.ecs import ECSCoordinator
-from src.systems.rendering import renderCircles, renderTextures, renderTerrain
+from src.systems.rendering import renderCircles, renderTextures, renderTerrain, renderSight
 from src.systems.debug import randomMovement
 from src.systems.senses import senseSight
 from src.systems.memory import workingMemory, assosciativeMemory
 from src.systems.needs import updateNutrients
 from src.systems.evaluations import updateEvaluations
-from src.systems.behaviours import moveToTarget, eatTarget, brainValidate
+from src.systems.behaviours import moveToTarget, eatTarget, brainValidate, epoch
 from src.systems.growth import growth
-from src.systems.remove_components import updateRemoveComponent, updateRemoveEntity, updateAddComponent
+from src.systems.remove_components import updateRemoveComponent, updateRemoveEntity, updateAddComponent, updateSizeEntity
 from src import constants
 from src.texture_data import TextureData
 
@@ -20,7 +20,7 @@ MOVEMENT_AMOUNT: int = 1
 
 def main():
     camera: Point3D = Point3D(0, 0, 0)
-    viewport: Point2D = Point2D(960, 540)
+    viewport: Point2D = Point2D(1280, 720)
     coordinator: ECSCoordinator = ECSCoordinator()
 
     constants.POSITION_COMPONENT = coordinator.registerComponent()
@@ -43,12 +43,19 @@ def main():
     constants.REMOVE_ENTITY_COMPONENT = coordinator.registerComponent()
     constants.DIRTY_POSITION_COMPONENT = coordinator.registerComponent()
     constants.ADD_HEALTH_COMPONENT = coordinator.registerComponent()
+    constants.PHYSICAL_BUZZ = coordinator.registerComponent()
 
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
 
-    for _ in range(1000):
-        terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), random.randint(0, len(constants.species_types) - 1))
+    tpes = [
+        200,
+        700,
+        100
+    ]
+    for typist, a in enumerate(tpes):
+        for _ in range(a):
+            terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), typist)
 
     
     terrain.regenerateEntityQuadtree(coordinator)
@@ -75,6 +82,9 @@ def main():
 
     def swapPause():
         constants.RUNNING = not constants.RUNNING
+
+    def swapSight():
+        constants.DRAW_SIGHT = not constants.DRAW_SIGHT
         
     def marchStep():
         if not constants.RUNNING:
@@ -89,10 +99,12 @@ def main():
     debug_circles = UIButton(pygame.Rect(3, 3, 116, 26), "Debug Circles", manager, panel.get_container(), command=swapCircles)
     debug_sprites = UIButton(pygame.Rect(3, 29, 116, 26), "Debug Sprites", manager, panel.get_container(), command=swapSprites)
     debug_terrain = UIButton(pygame.Rect(3, 55, 116, 26), "Debug Terrain", manager, panel.get_container(), command=swapTerrain)
-    pause = UIButton(pygame.Rect(3, 81, 116, 26), "Pause", manager, panel.get_container(), command=swapPause)
-    one_step = UIButton(pygame.Rect(3, 107, 116, 26), "One Step", manager, panel.get_container(), command=marchStep)
-    fps_slider_label = UILabel(pygame.Rect(3, 133, 116, 26), f"FPS Cap: {constants.FPS}", manager, panel.get_container())
-    fps_slider = UIHorizontalSlider(pygame.Rect(3, 159, 116, 26), constants.FPS, (1, 600), manager, panel.get_container())
+    debug_sight = UIButton(pygame.Rect(3, 81, 116, 26), "Debug Sight", manager, panel.get_container(), command=swapSight)
+    pause = UIButton(pygame.Rect(3, 107, 116, 26), "Pause", manager, panel.get_container(), command=swapPause)
+    one_step = UIButton(pygame.Rect(3, 133, 116, 26), "One Step", manager, panel.get_container(), command=marchStep)
+    fps_slider_label = UILabel(pygame.Rect(3, 159, 116, 26), f"FPS Cap: {constants.FPS}", manager, panel.get_container())
+    fps_slider = UIHorizontalSlider(pygame.Rect(3, 182, 116, 26), constants.FPS, (1, 600), manager, panel.get_container())
+    moo_slider = UIHorizontalSlider(pygame.Rect(3, 208, 116, 26), constants.PIXELS_PER_METER, (1, 100), manager, panel.get_container())
 
     running: bool = True
 
@@ -131,6 +143,9 @@ def main():
                     if event.ui_element == fps_slider:
                         constants.FPS = fps_slider.get_current_value()
                         fps_slider_label.set_text(f"FPS Cap: {constants.FPS}")
+                    elif event.ui_element == moo_slider:
+                        constants.PIXELS_PER_METER = moo_slider.get_current_value()
+                        constants.PIXELS_PER_TILE = constants.PIXELS_PER_METER * constants.METERS_PER_TILE
             
             manager.process_events(event)
         
@@ -145,6 +160,7 @@ def main():
                     # Senses
                     senseSight(coordinator, terrain)
                 case 10:
+                    epoch(coordinator, terrain)
                     # Memory
                     workingMemory(coordinator)
                     assosciativeMemory(coordinator)
@@ -156,7 +172,9 @@ def main():
                 # Behaviours
                 moveToTarget(coordinator, terrain)
                 eatTarget(coordinator)
+            
             updateAddComponent(coordinator)
+            updateSizeEntity(coordinator)
             terrain.updateDirtyEntityQuadtree(coordinator)
             updateRemoveComponent(coordinator)
             updateRemoveEntity(coordinator)
@@ -182,12 +200,15 @@ def main():
 
         # Rendering
         screen.fill((32, 48, 64))
+        entities = terrain.entities.query((camera.scaleBy(1, 1, 0) - terrain.position), (camera.scaleBy(1, 1, 0) + Point3D(viewport.x // constants.PIXELS_PER_METER, viewport.y // constants.PIXELS_PER_METER, terrain.TERRAIN_SIZE * constants.METERS_PER_TILE) - terrain.position))
         if constants.DRAW_TERRAIN:
             renderTerrain(coordinator, screen, camera, viewport, terrain)
         if constants.DRAW_CIRCLES:
-            renderCircles(coordinator, screen, camera, viewport, terrain)
+            renderCircles(coordinator, screen, camera, viewport, terrain, entities)
+        if constants.DRAW_SIGHT:
+            renderSight(coordinator, screen, camera, viewport, terrain, entities)
         if constants.DRAW_SPRITES:
-            renderTextures(coordinator, screen, camera, viewport, terrain)
+            renderTextures(coordinator, screen, camera, viewport, terrain, entities)
 
         manager.draw_ui(screen)
 

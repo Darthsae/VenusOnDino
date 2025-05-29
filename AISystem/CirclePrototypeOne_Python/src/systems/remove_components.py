@@ -1,6 +1,7 @@
 from ..ecs import ECSCoordinator
 from .. import constants
 from ..components.health_component import HealthComponent
+from ..components.physical_body import PhysicalBody
 
 def updateRemoveComponent(coordinator: ECSCoordinator):
     for entity_id in coordinator.getEntitiesWithComponent(constants.REMOVE_HEALTH_COMPONENT):
@@ -21,3 +22,14 @@ def updateAddComponent(coordinator: ECSCoordinator):
 def updateRemoveEntity(coordinator: ECSCoordinator):
     for entity_id in coordinator.getEntitiesWithComponent(constants.REMOVE_ENTITY_COMPONENT):
         coordinator.removeEntity(entity_id)
+
+def updateSizeEntity(coordinator: ECSCoordinator):
+    for entity_id in coordinator.getEntitiesWithComponent(constants.PHYSICAL_BUZZ):
+        phy: PhysicalBody = coordinator.getComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT)
+        if phy.size < 0:
+            remove_component: list[str] = coordinator.getComponent(entity_id, constants.PHYSICAL_BUZZ)[0]
+            remover_component: list[tuple[str, ...]] = coordinator.getComponent(entity_id, constants.PHYSICAL_BUZZ)[1]
+
+            for comp, dat in remover_component:
+                coordinator.setComponent(entity_id, constants.componentPull(comp), dat)
+            coordinator.removeComponents(entity_id, set({constants.PHYSICAL_BUZZ}) | set(map(constants.componentPull, remove_component)))

@@ -2,7 +2,7 @@ from ..ecs import ECSCoordinator
 from ..world.terrain import Terrain
 from ..position import Point2D, Point3D
 from ..components.sight_sensor import SightSensor
-from ..components.brain_component import BrainComponent, EntityTarget
+from ..components.brain_component import BrainComponent, EntityTarget, PositionContext, Emoticon
 from ..components.physical_body import PhysicalBody
 from .. import constants
 import math
@@ -12,6 +12,8 @@ def senseSight(coordinator: ECSCoordinator, terrain: Terrain):
         position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
         sight_range: SightSensor = coordinator.getComponent(entity_id, constants.SIGHT_COMPONENT)
         brain_component: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
+        if brain_component.target_position.valid and brain_component.target_position.context == PositionContext.ROAM:
+            brain_component.emoticon = Emoticon.ROAMING
         physical_body: PhysicalBody = coordinator.getComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT)
         #print(entity_id)
         angle: float = math.radians(270 - physical_body.rotation)

@@ -215,17 +215,18 @@ def main():
 
         # Rendering
         screen.fill((32, 48, 64))
-        entities = {tup for tup in terrain.entities.query((camera.scaleBy(1, 1, 0) - terrain.position), (camera.scaleBy(1, 1, 0) + Point3D(viewport.x // constants.PIXELS_PER_METER, viewport.y // constants.PIXELS_PER_METER, terrain.TERRAIN_SIZE * constants.METERS_PER_TILE) - terrain.position)) if tup[1] in coordinator.entities}
-        if constants.DRAW_TERRAIN:
-            renderTerrainTextures(coordinator, screen, camera, viewport, terrain)
-        if constants.DRAW_CIRCLES:
-            renderCircles(coordinator, screen, camera, viewport, terrain, entities)
-        if constants.DRAW_SIGHT:
-            renderSight(coordinator, screen, camera, viewport, terrain, entities)
-        if constants.DRAW_SPRITES:
-            renderTextures(coordinator, screen, camera, viewport, terrain, entities)
-            if stutter_thirty < 25:
-                renderEmoticons(coordinator, screen, camera, viewport, terrain, entities)
+        if constants.DRAW_TERRAIN or constants.DRAW_CIRCLES or constants.DRAW_SIGHT or constants.DRAW_SPRITES:
+            entities = {tup for tup in terrain.entities.query((camera.scaleBy(1, 1, 0) - terrain.position), (camera.scaleBy(1, 1, 0) + Point3D(viewport.x // constants.PIXELS_PER_METER, viewport.y // constants.PIXELS_PER_METER, terrain.TERRAIN_SIZE * constants.METERS_PER_TILE) - terrain.position)) if tup[1] in coordinator.entities}
+            if constants.DRAW_TERRAIN:
+                renderTerrainTextures(coordinator, screen, camera, viewport, terrain)
+            if constants.DRAW_CIRCLES:
+                renderCircles(coordinator, screen, camera, viewport, terrain, entities)
+            if constants.DRAW_SIGHT:
+                renderSight(coordinator, screen, camera, viewport, terrain, entities)
+            if constants.DRAW_SPRITES:
+                renderTextures(coordinator, screen, camera, viewport, terrain, entities)
+                if stutter_thirty < 25:
+                    renderEmoticons(coordinator, screen, camera, viewport, terrain, entities)
 
         manager.draw_ui(screen)
 

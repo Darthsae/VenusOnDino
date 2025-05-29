@@ -17,6 +17,7 @@ import math
 
 def foodEvaluator(coordinator: ECSCoordinator, entity_id: entity, terrain: "Terrain", data: dict[str, Any]):
     brain: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
+    
     diet: DietComponent = coordinator.getComponent(entity_id, constants.DIET_COMPONENT)
     amount: float = 0.0
     if coordinator.hasComponent(entity_id, constants.EAT_TARGET_COMPONENT):

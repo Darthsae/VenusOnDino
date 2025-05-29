@@ -4,11 +4,11 @@ from pygame_gui.elements import UILabel, UIPanel, UIProgressBar, UIHorizontalSli
 from src.world.terrain import Terrain
 from src.position import Point2D, Point3D
 from src.ecs import ECSCoordinator
-from src.systems.rendering import renderCircles, renderTextures, renderTerrain, renderSight
+from src.systems.rendering import renderCircles, renderTextures, renderTerrain, renderSight, renderEmoticons
 from src.systems.debug import randomMovement
 from src.systems.senses import senseSight
 from src.systems.memory import workingMemory, assosciativeMemory
-from src.systems.needs import updateNutrients
+from src.systems.needs import updateNutrients, updateEnergy, damagedComponent
 from src.systems.evaluations import updateEvaluations
 from src.systems.behaviours import moveToTarget, eatTarget, brainValidate, epoch
 from src.systems.growth import growth
@@ -43,15 +43,17 @@ def main():
     constants.REMOVE_ENTITY_COMPONENT = coordinator.registerComponent()
     constants.DIRTY_POSITION_COMPONENT = coordinator.registerComponent()
     constants.ADD_HEALTH_COMPONENT = coordinator.registerComponent()
-    constants.PHYSICAL_BUZZ = coordinator.registerComponent()
+    constants.PHYSICAL_BUZZ_COMPONENT = coordinator.registerComponent()
+    constants.ENERGY_COMPONENT = coordinator.registerComponent()
+    constants.DAMAGED_COMPONENT = coordinator.registerComponent()
 
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
 
     tpes = [
-        200,
-        700,
-        100
+        350,
+        600,
+        50
     ]
     for typist, a in enumerate(tpes):
         for _ in range(a):
@@ -65,11 +67,14 @@ def main():
     clock = pygame.time.Clock()
 
     constants.textures = [
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Goat.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Tyrant.png"),
-        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Titan.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Plant.png"),
-        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Meat.png")
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Meat.png"),
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/RottenMeat.png")
     ]
+
+    constants.sleepy = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Sleeping.png")
 
     def swapCircles():
         constants.DRAW_CIRCLES = not constants.DRAW_CIRCLES
@@ -153,6 +158,7 @@ def main():
             if stutter_double:
                 # MISC
                 updateNutrients(coordinator)
+                updateEnergy(coordinator)
                 growth(coordinator)
             
             match stutter_thirty:
@@ -161,6 +167,7 @@ def main():
                     senseSight(coordinator, terrain)
                 case 10:
                     epoch(coordinator, terrain)
+                    damagedComponent(coordinator)
                     # Memory
                     workingMemory(coordinator)
                     assosciativeMemory(coordinator)
@@ -172,6 +179,7 @@ def main():
                 # Behaviours
                 moveToTarget(coordinator, terrain)
                 eatTarget(coordinator)
+            
             
             updateAddComponent(coordinator)
             updateSizeEntity(coordinator)
@@ -200,7 +208,7 @@ def main():
 
         # Rendering
         screen.fill((32, 48, 64))
-        entities = terrain.entities.query((camera.scaleBy(1, 1, 0) - terrain.position), (camera.scaleBy(1, 1, 0) + Point3D(viewport.x // constants.PIXELS_PER_METER, viewport.y // constants.PIXELS_PER_METER, terrain.TERRAIN_SIZE * constants.METERS_PER_TILE) - terrain.position))
+        entities = {tup for tup in terrain.entities.query((camera.scaleBy(1, 1, 0) - terrain.position), (camera.scaleBy(1, 1, 0) + Point3D(viewport.x // constants.PIXELS_PER_METER, viewport.y // constants.PIXELS_PER_METER, terrain.TERRAIN_SIZE * constants.METERS_PER_TILE) - terrain.position)) if tup[1] in coordinator.entities}
         if constants.DRAW_TERRAIN:
             renderTerrain(coordinator, screen, camera, viewport, terrain)
         if constants.DRAW_CIRCLES:
@@ -209,6 +217,8 @@ def main():
             renderSight(coordinator, screen, camera, viewport, terrain, entities)
         if constants.DRAW_SPRITES:
             renderTextures(coordinator, screen, camera, viewport, terrain, entities)
+            if stutter_thirty < 25:
+                renderEmoticons(coordinator, screen, camera, viewport, terrain, entities)
 
         manager.draw_ui(screen)
 

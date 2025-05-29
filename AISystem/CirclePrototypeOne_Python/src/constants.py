@@ -10,6 +10,8 @@ from .components.textured_component import TexturedComponent
 
 textures: list[TextureData] = []
 
+sleepy: TextureData
+
 tile_types: list[TileType] = [
     TileType("Dirt", (168, 84, 0), PhysicalState.SOLID),
     TileType("Water", (0, 0, 200), PhysicalState.LIQUID, [
@@ -19,9 +21,9 @@ tile_types: list[TileType] = [
 ]
 
 species_types: list[Species] = [
-    Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 10, 0, 0, {NutrientType.PROTEIN: 200.5}, [
-        NutrientStat(NutrientType.FIBER, 0.1, 30.0, 0.005, 0.25),
-        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.005, 0.25)
+    Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 10, 0.25, 0, 0, {NutrientType.PROTEIN: 200.5}, [
+        NutrientStat(NutrientType.FIBER, 0.1, 3.0, 0.0025, 0.25),
+        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.0001, 30.0)
     ], 10, 0.1, False, [
         "brain",
         "sight",
@@ -29,7 +31,8 @@ species_types: list[Species] = [
         "health",
         "eat_target",
         "move_to_target",
-        "remove_health"
+        "remove_health",
+        "energy"
     ], [
         EvaluatorInstance(2, {
             "threat": [
@@ -45,16 +48,16 @@ species_types: list[Species] = [
         ], [
             ("remove_entity", True)
         ]))
-    ]),
-    Species("Shrub", (0, 255, 0), 2, 2, 2, 600, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 25.5}, [], -1, 0, True, [
+    ], 1200, 1200),
+    Species("Shrub", (0, 255, 0), 2, 2, 2, 600, 0, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 25.5}, [], -1, 0, True, [
         "health",
         "size_health",
         "growth",
         "remove_health"
     ], [], [
         ("remove_entity", True)
-    ]),
-    Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0, 0, {NutrientType.PROTEIN: 2.5}, [
+    ], 0, 0),
+    Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0.8, 0, 0, {NutrientType.PROTEIN: 2.5}, [
         NutrientStat(NutrientType.PROTEIN, 0.1, 300.0, 0.005, 0.15),
         NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 0.15)
     ], 10, 0.1, False, [
@@ -64,7 +67,8 @@ species_types: list[Species] = [
         "health",
         "eat_target",
         "move_to_target",
-        "remove_health"
+        "remove_health",
+        "energy"
     ], [
         EvaluatorInstance(2, {
             "threat": [
@@ -80,7 +84,7 @@ species_types: list[Species] = [
         ], [
             ("remove_entity", True)
         ]))
-    ]),
+    ], 6000, 6000),
 ]
 
 evaluator_types: list[IEvaluator] = [
@@ -136,7 +140,11 @@ def componentPull(id: str):
         case "add_health":
             return ADD_HEALTH_COMPONENT
         case "physical_buzz":
-            return PHYSICAL_BUZZ
+            return PHYSICAL_BUZZ_COMPONENT
+        case "energy":
+            return ENERGY_COMPONENT
+        case "damaged":
+            return DAMAGED_COMPONENT
 
 POSITION_COMPONENT: component
 PHYSICAL_BODY_COMPONENT: component
@@ -158,7 +166,9 @@ REMOVE_HEALTH_COMPONENT: component
 REMOVE_ENTITY_COMPONENT: component
 DIRTY_POSITION_COMPONENT: component
 ADD_HEALTH_COMPONENT: component
-PHYSICAL_BUZZ: component
+PHYSICAL_BUZZ_COMPONENT: component
+ENERGY_COMPONENT: component
+DAMAGED_COMPONENT: component
 
 DRAW_CIRCLES: bool = False
 DRAW_SPRITES: bool = True

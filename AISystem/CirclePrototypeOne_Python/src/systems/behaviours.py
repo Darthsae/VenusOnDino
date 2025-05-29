@@ -28,6 +28,10 @@ def moveToTarget(coordinator: ECSCoordinator, terrain: Terrain):
                 coordinator.setComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT, rigid)
                 coordinator.setComponent(entity_id, constants.DIRTY_POSITION_COMPONENT, position)
                 coordinator.setComponent(entity_id, constants.POSITION_COMPONENT, position + (direction * move_to_target.speed).asPoint3D())
+                
+                e = coordinator.getComponent(entity_id, constants.ENERGY_COMPONENT)
+                e.current -= max(math.floor(move_to_target.speed), 1)
+                coordinator.setComponent(entity_id, constants.ENERGY_COMPONENT, e)
 
 def eatTarget(coordinator: ECSCoordinator):
     for entity_id in coordinator.getEntitiesWithComponent(constants.EAT_TARGET_COMPONENT):
@@ -44,6 +48,12 @@ def eatTarget(coordinator: ECSCoordinator):
                 health = coordinator.getComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT)
                 sizer *= health.current / health.max
             if entity_pos.distSQ(position) <= (sizer + size) ** 2:
+                pag = entity_pos - position
+                if pag.magnitude() != 0:
+                    direction: Vector3D = pag.norm()
+                    angle = math.degrees(math.atan2(direction.y, direction.x))
+                    physical_body.rotation = 270 - angle
+                    coordinator.setComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT, physical_body)
                 diet: DietComponent = coordinator.getComponent(entity_id, constants.DIET_COMPONENT)
                 nutrition: NutrientSource = coordinator.getComponent(brain_component.target_creature.creature, constants.NUTRIENT_SOURCE_COMPONENT)
                 #if constants.NutrientType.PROTEIN in nutrition.nutrients:
@@ -54,9 +64,13 @@ def eatTarget(coordinator: ECSCoordinator):
                     health: HealthComponent = coordinator.getComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT)
                     health.current = min(max(health.current - eat_target.damage, 0), health.max)
                     coordinator.setComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT, health)
-                elif coordinator.hasComponent(brain_component.target_creature.creature, constants.PHYSICAL_BUZZ):
+                    coordinator.setComponent(brain_component.target_creature.creature, constants.DAMAGED_COMPONENT, (255, 0, 0))
+                elif coordinator.hasComponent(brain_component.target_creature.creature, constants.PHYSICAL_BUZZ_COMPONENT):
                     phy: PhysicalBody = coordinator.getComponent(brain_component.target_creature.creature, constants.PHYSICAL_BODY_COMPONENT)
                     phy.size -= eat_target.damage / 360
+                e = coordinator.getComponent(entity_id, constants.ENERGY_COMPONENT)
+                e.current -= eat_target.damage
+                coordinator.setComponent(entity_id, constants.ENERGY_COMPONENT, e)
 
 
 def brainValidate(coordinator: ECSCoordinator):

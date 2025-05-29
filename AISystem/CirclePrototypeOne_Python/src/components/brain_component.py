@@ -47,9 +47,14 @@ class TargetCreature:
         self.creature = creature
         self.valid = True
 
+class CreatureState(Enum):
+    AWAKE = 0
+    SLEEPING = 1
+
 @dataclass
 class BrainComponent:
     evaluators: list[EvaluatorInstance]
     entities: list[EntityTarget]
     target_position: TargetPosition
     target_creature: TargetCreature
+    state: CreatureState = CreatureState.AWAKE

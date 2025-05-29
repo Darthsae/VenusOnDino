@@ -10,9 +10,9 @@ from src.systems.senses import senseSight
 from src.systems.memory import workingMemory, assosciativeMemory
 from src.systems.needs import updateNutrients
 from src.systems.evaluations import updateEvaluations
-from src.systems.behaviours import moveToTarget, eatTarget
+from src.systems.behaviours import moveToTarget, eatTarget, brainValidate
 from src.systems.growth import growth
-from src.systems.remove_components import updateRemoveComponent, updateRemoveEntity
+from src.systems.remove_components import updateRemoveComponent, updateRemoveEntity, updateAddComponent
 from src import constants
 from src.texture_data import TextureData
 
@@ -42,6 +42,7 @@ def main():
     constants.REMOVE_HEALTH_COMPONENT = coordinator.registerComponent()
     constants.REMOVE_ENTITY_COMPONENT = coordinator.registerComponent()
     constants.DIRTY_POSITION_COMPONENT = coordinator.registerComponent()
+    constants.ADD_HEALTH_COMPONENT = coordinator.registerComponent()
 
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
@@ -59,7 +60,8 @@ def main():
     constants.textures = [
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Tyrant.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Titan.png"),
-        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Plant.png")
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Plant.png"),
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Meat.png")
     ]
 
     def swapCircles():
@@ -154,10 +156,11 @@ def main():
                 # Behaviours
                 moveToTarget(coordinator, terrain)
                 eatTarget(coordinator)
-            
+            updateAddComponent(coordinator)
             terrain.updateDirtyEntityQuadtree(coordinator)
             updateRemoveComponent(coordinator)
             updateRemoveEntity(coordinator)
+            brainValidate(coordinator)
             
             stutter_double = not stutter_double
             stutter_triple += 1

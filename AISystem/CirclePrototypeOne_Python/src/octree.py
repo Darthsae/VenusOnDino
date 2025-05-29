@@ -30,9 +30,9 @@ class OctreeNode[T]:
             self.position.z + self.half_size < lower_point.z):
             return set()
         elif self.children[0] == None:
-            return {(pos, child) for pos, child in self.occupants.items() if (lower_point.x < pos.x < higher_point.x and
-                                                          lower_point.y < pos.y < higher_point.y and
-                                                          lower_point.z < pos.z < higher_point.z)}
+            return {(pos, child) for pos, child in self.occupants.items() if (lower_point.x <= pos.x <= higher_point.x and
+                                                          lower_point.y <= pos.y <= higher_point.y and
+                                                          lower_point.z <= pos.z <= higher_point.z)}
         else:
             to_return = set()
             for child in self.children:
@@ -40,9 +40,9 @@ class OctreeNode[T]:
             return to_return
     
     def insert(self, position: Point3D, data: T):
-        if not (self.position.x - self.half_size < position.x < self.position.x + self.half_size and
-                self.position.y - self.half_size < position.y < self.position.y + self.half_size and
-                self.position.z - self.half_size < position.z < self.position.z + self.half_size):
+        if not (self.position.x - self.half_size <= position.x <= self.position.x + self.half_size and
+                self.position.y - self.half_size <= position.y <= self.position.y + self.half_size and
+                self.position.z - self.half_size <= position.z <= self.position.z + self.half_size):
             return
         elif self.children[0] == None:
             self.occupants[position] = data
@@ -65,9 +65,9 @@ class OctreeNode[T]:
             self.children[x + y * 2 + z * 4].insert(position, data)
     
     def pop(self, position: Point3D) -> bool:
-        if not (self.position.x - self.half_size < position.x < self.position.x + self.half_size and
-                self.position.y - self.half_size < position.y < self.position.y + self.half_size and
-                self.position.z - self.half_size < position.z < self.position.z + self.half_size):
+        if not (self.position.x - self.half_size <= position.x <= self.position.x + self.half_size and
+                self.position.y - self.half_size <= position.y <= self.position.y + self.half_size and
+                self.position.z - self.half_size <= position.z <= self.position.z + self.half_size):
             return False
         elif self.children[0] == None:
             return self.occupants.pop(position, None) != None

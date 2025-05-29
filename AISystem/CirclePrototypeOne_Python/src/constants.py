@@ -2,17 +2,18 @@ from .world.tile import TileType, PhysicalState
 from .species import Species
 from .ecs import component
 from .ai.evaluator import IEvaluator, EvaluatorInstance
-from .ai.evaluators import targetEvaluator, foodEvaluator
+from .ai.evaluators import sizeThreatEvaluator, foodEvaluator, componentEvaluator
 from .components.diet_component import NutrientType, NutrientStat
 from .texture_data import TextureData
 from .components.nutrient_source import NutrientSource
+from .components.textured_component import TexturedComponent
 
 textures: list[TextureData] = []
 
 tile_types: list[TileType] = [
     TileType("Dirt", (168, 84, 0), PhysicalState.SOLID),
     TileType("Water", (0, 0, 200), PhysicalState.LIQUID, [
-        ("nutrient_source", NutrientSource({NutrientType.WATER: 1000}))
+        #("nutrient_source", NutrientSource({NutrientType.WATER: 1000}))
     ]),
     TileType("Air", (255, 255, 255), PhysicalState.GAS)
 ]
@@ -20,7 +21,7 @@ tile_types: list[TileType] = [
 species_types: list[Species] = [
     Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 10, 0, 0, {NutrientType.PROTEIN: 2.5}, [
         NutrientStat(NutrientType.FIBER, 0.1, 30.0, 0.005, 0.25),
-        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.005, 0.25)
+        #NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.005, 0.25)
     ], 10, 0.1, False, [
         "brain",
         "sight",
@@ -31,17 +32,27 @@ species_types: list[Species] = [
         "remove_health",
         "textured"
     ], [
+        EvaluatorInstance(2, {
+            "threat": [
+                "eat_target"
+            ]
+        }),
+        EvaluatorInstance(0, {}),
         EvaluatorInstance(1, {})
+    ], [
+        ("textured", TexturedComponent(3))
     ]),
     Species("Shrub", (0, 255, 0), 2, 2, 2, 600, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 25.5}, [], -1, 0, True, [
         "health",
         "size_health",
         "growth",
         "remove_health"
-    ], []),
+    ], [], [
+        ("remove_entity", True)
+    ]),
     Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0, 0, {NutrientType.PROTEIN: 2.5}, [
         NutrientStat(NutrientType.PROTEIN, 0.1, 30.0, 0.005, 0.25),
-        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 0.15)
+        #NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 0.15)
     ], 10, 0.1, False, [
         "brain",
         "sight",
@@ -52,13 +63,22 @@ species_types: list[Species] = [
         "remove_health",
         "textured"
     ], [
+        EvaluatorInstance(2, {
+            "threat": [
+                "eat_target"
+            ]
+        }),
+        EvaluatorInstance(0, {}),
         EvaluatorInstance(1, {})
+    ], [
+        ("textured", TexturedComponent(3))
     ]),
 ]
 
 evaluator_types: list[IEvaluator] = [
-    targetEvaluator,
-    foodEvaluator
+    sizeThreatEvaluator,
+    foodEvaluator,
+    componentEvaluator
 ]
 
 METERS_PER_TILE: int = 2
@@ -105,6 +125,8 @@ def componentPull(id: str):
             return REMOVE_ENTITY_COMPONENT
         case "dirty_position":
             return DIRTY_POSITION_COMPONENT
+        case "add_health":
+            return ADD_HEALTH_COMPONENT
 
 POSITION_COMPONENT: component
 PHYSICAL_BODY_COMPONENT: component
@@ -125,8 +147,9 @@ SIZE_HEALTH_COMPONENT: component
 REMOVE_HEALTH_COMPONENT: component
 REMOVE_ENTITY_COMPONENT: component
 DIRTY_POSITION_COMPONENT: component
+ADD_HEALTH_COMPONENT: component
 
-DRAW_CIRCLES: bool = True
+DRAW_CIRCLES: bool = False
 DRAW_SPRITES: bool = True
 DRAW_TERRAIN: bool = True
 RUNNING: bool = True

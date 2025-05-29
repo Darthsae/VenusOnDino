@@ -12,6 +12,19 @@ class PositionContext(Enum):
     MATE = 4
 
 @dataclass
+class EntityTarget:
+    position: Point3D
+    id: entity
+    threat: float = None
+    nutrition: float = None
+
+    def threatByDistance(self, point: Point3D):
+        return self.threat / (point.distSQ(self.position) if self.position != point else 1.0) if self.threat != None else 0.0
+
+    def nutritionByDistance(self, point: Point3D):
+        return self.nutrition / (point.distSQ(self.position) if self.position != point else 1.0) if self.nutrition != None else 0.0
+
+@dataclass
 class TargetPosition:
     position: Point3D
     context: PositionContext
@@ -37,6 +50,6 @@ class TargetCreature:
 @dataclass
 class BrainComponent:
     evaluators: list[EvaluatorInstance]
-    entities: set[tuple[Point3D, entity]]
+    entities: list[EntityTarget]
     target_position: TargetPosition
     target_creature: TargetCreature

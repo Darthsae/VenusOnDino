@@ -10,5 +10,5 @@ class NutrientSource:
     
     def func(self):
         def funcy(tup):
-            return tup[1] * tup[2] * self.nutrients.get(tup[0], 0)
+            return pow(tup[1] * tup[2] * self.nutrients.get(tup[0], 0), 3)
         return funcy

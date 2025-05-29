@@ -30,7 +30,7 @@ def eatTarget(coordinator: ECSCoordinator):
         size = physical_body.size
         position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
         brain_component: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
-        if brain_component.target_creature.valid:
+        if brain_component.target_creature.valid and brain_component.target_creature.creature in coordinator.entities:
             entity_pos: Point3D = coordinator.getComponent(brain_component.target_creature.creature, constants.POSITION_COMPONENT)
             entity_size: Point3D = coordinator.getComponent(brain_component.target_creature.creature, constants.PHYSICAL_BODY_COMPONENT).size
             sizer = entity_size
@@ -46,3 +46,17 @@ def eatTarget(coordinator: ECSCoordinator):
                     health: HealthComponent = coordinator.getComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT)
                     health.current = min(max(health.current - eat_target.damage, 0), health.max)
                     coordinator.setComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT, health)
+
+
+def brainValidate(coordinator: ECSCoordinator):
+    for entity_id in coordinator.getEntitiesWithComponent(constants.BRAIN_COMPONENT):
+        brain_component: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
+        to_del = []
+        for i, entityer in enumerate(brain_component.entities):
+            if entityer.id not in coordinator.entities:
+                to_del.append(i)
+        
+        to_del.reverse()
+
+        for e in to_del:
+            brain_component.entities.pop(e)

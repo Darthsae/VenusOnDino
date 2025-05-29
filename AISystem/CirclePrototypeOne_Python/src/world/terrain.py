@@ -37,7 +37,7 @@ class Terrain:
                     quran = coordinator.createEntity()
                     for itex, idex in hot:
                         coordinator.setComponent(quran, constants.componentPull(itex), idex)
-                    coordinator.setComponent(quran, constants.POSITION_COMPONENT, Point3D((x + 0.5) * constants.METERS_PER_TILE, (y + 0.5) * constants.METERS_PER_TILE, 10))
+                    coordinator.setComponent(quran, constants.POSITION_COMPONENT, Point3D((x + 0.5) * constants.METERS_PER_TILE, (y + 0.5) * constants.METERS_PER_TILE, 5))
                     coordinator.setComponent(quran, constants.PHYSICAL_BODY_COMPONENT, PhysicalBody(100, constants.METERS_PER_TILE / 2))
         
         for entity_id in coordinator.getEntitiesWithComponent(constants.POSITION_COMPONENT):
@@ -87,5 +87,7 @@ class Terrain:
             coordinator.setComponent(new_entity, constants.EAT_TARGET_COMPONENT, EatTargetComponent(constants.species_types[species].eats, constants.species_types[species].eat_amount))
         if len(constants.species_types[species].remover) > 0:
             coordinator.setComponent(new_entity, constants.REMOVE_HEALTH_COMPONENT, constants.species_types[species].remover.copy())
+        if len(constants.species_types[species].adder) > 0:
+            coordinator.setComponent(new_entity, constants.ADD_HEALTH_COMPONENT, constants.species_types[species].adder.copy())
 
         return new_entity

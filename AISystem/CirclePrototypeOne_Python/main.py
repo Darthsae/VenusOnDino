@@ -112,6 +112,7 @@ def main():
     debug_panel = UIPanel((viewport.x - 128, 0, 128, 64), manager=manager)
     position_label = UILabel(pygame.Rect(3, 3, 116, 26), f"Camera: {camera.x}, {camera.y}", manager, debug_panel.get_container())
     fps_label = UILabel(pygame.Rect(3, 29, 116, 26), f"FPS: {clock.get_fps():.2f}", manager, debug_panel.get_container())
+    entity_label = UILabel(pygame.Rect(3, 55, 116, 26), f"Entities: {len(coordinator.entities)}", manager, debug_panel.get_container())
     panel = UIPanel((0, 0, 128, 456), manager=manager)
     debug_circles = UIButton(pygame.Rect(3, 3, 116, 26), "Debug Circles", manager, panel.get_container(), command=swapCircles)
     debug_sprites = UIButton(pygame.Rect(3, 29, 116, 26), "Debug Sprites", manager, panel.get_container(), command=swapSprites)
@@ -186,6 +187,7 @@ def main():
                 case 10:
                     epoch(coordinator)
                     damagedComponent(coordinator)
+                    entity_label.set_text(f"Entities: {len(coordinator.entities)}")
                     # Memory
                     workingMemory(coordinator)
                     assosciativeMemory(coordinator)

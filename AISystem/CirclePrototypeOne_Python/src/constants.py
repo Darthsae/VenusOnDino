@@ -56,7 +56,7 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 1200, 1200, (1.5, 0, 1, 60, -160, 25, 0.01, True)),
+    ], 1200, 1200, (1.5, 0, 1, 60, -160, 25, 0.01, 1)),
     Species("Shrub", (0, 255, 0), 2, 2, 2, 600, 0, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 125}, [], -1, 0, True, [
         "health",
         "size_health",
@@ -64,7 +64,7 @@ species_types: list[Species] = [
         "remove_health"
     ], [], [
         ("remove_entity", True)
-    ], 0, 0, (4.5, 1, 1, 300, -250, 0, 0.15, False)),
+    ], 0, 0, (12.5, 1, 1, 300, -250, 0, 0.15, -1)),
     Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0.8, 0, 0, {NutrientType.PROTEIN: 225}, [
         NutrientStat(NutrientType.PROTEIN, 0.1, 300.0, 0.005, 25),
         NutrientStat(NutrientType.WATER, 0.01, 150.0, 0.001, 15)
@@ -95,7 +95,7 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 6000, 6000, (1.5, 2, 1, 120, -120, 25, 0.01, True)),
+    ], 6000, 6000, (1.5, 2, 1, 120, -120, 25, 0.01, 1)),
 ]
 
 evaluator_types: list = [

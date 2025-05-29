@@ -10,5 +10,5 @@ class ReproduceComponent:
     cooldown: int 
     energy_use: int
     chance: float
-    others: bool
+    others: int
     current: int = 0

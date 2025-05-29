@@ -49,6 +49,7 @@ def main():
     constants.DAMAGED_COMPONENT = coordinator.registerComponent()
     constants.TIMER_COMPONENT = coordinator.registerComponent()
     constants.REPRODUCE_COMPONENT = coordinator.registerComponent()
+    constants.ATTACK_TARGET_COMPONENT = coordinator.registerComponent()
 
     terrain: Terrain = Terrain(Point2D(0, 0))
     terrain.spoof()
@@ -56,7 +57,8 @@ def main():
     species_amounts = [
         150,
         800,
-        25
+        25,
+        75
     ]
     for species_index, species_count in enumerate(species_amounts):
         for _ in range(species_count):
@@ -75,12 +77,14 @@ def main():
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Plant.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Meat.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/RottenMeat.png"),
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Trumpet.png"),
     ]
 
     constants.sleepy = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Sleeping.png")
     constants.nom_nom = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Eat.png")
     constants.thirst_trap = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Drink.png")
     constants.boot_coprolite = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Roaming.png")
+    constants.warfare = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Attacking.png")
 
     def swapCircles():
         constants.DRAW_CIRCLES = not constants.DRAW_CIRCLES

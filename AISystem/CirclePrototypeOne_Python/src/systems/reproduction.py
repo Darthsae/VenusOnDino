@@ -31,15 +31,15 @@ def updateReproduction(coordinator: ECSCoordinator, terrain: Terrain):
             if reproduce_component.others != 0:
                 physical_body: PhysicalBody = coordinator.getComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT)
                 possible: set[tuple[Point3D, entity]] = terrain.entities.query(position - Point3D.fromUniform(physical_body.size * 2), position + Point3D.fromUniform(physical_body.size * 2))
-                success: bool = False
+                success: bool = reproduce_component.others != 1
                 id_of_self: int = coordinator.getComponent(entity_id, constants.SPECIES_COMPONENT)
                 for tup in possible:
-                    if coordinator.hasComponent(tup[1], constants.SPECIES_COMPONENT) and id_of_self == coordinator.getComponent(tup[1], constants.SPECIES_COMPONENT):
+                    if tup[1] in coordinator.entities and coordinator.hasComponent(tup[1], constants.SPECIES_COMPONENT) and id_of_self == coordinator.getComponent(tup[1], constants.SPECIES_COMPONENT):
                         if reproduce_component.others == 1:
                             success = True
                             break
                         elif reproduce_component.others == -1:
-                            mod *= 0.9
+                            mod *= 0.5
                 if not success:
                     continue
 

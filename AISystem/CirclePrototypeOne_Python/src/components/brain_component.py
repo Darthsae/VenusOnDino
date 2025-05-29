@@ -11,6 +11,12 @@ class PositionContext(Enum):
     ROAM = 3
     MATE = 4
 
+class CreatureContext(Enum):
+    SAFETY = 0
+    EAT = 1
+    FIGHT = 2
+    MATE = 3
+
 @dataclass
 class EntityTarget:
     position: Point3D
@@ -41,10 +47,12 @@ class TargetPosition:
 @dataclass
 class TargetCreature:
     creature: entity
+    context: CreatureContext = CreatureContext.SAFETY
     valid: bool = False
 
-    def setCreature(self, creature: entity):
+    def setCreature(self, creature: entity, context: CreatureContext):
         self.creature = creature
+        self.context = context
         self.valid = True
 
 class CreatureState(Enum):
@@ -56,6 +64,7 @@ class Emoticon(Enum):
     EATING = 1
     DRINKING = 2
     ROAMING = 3
+    FIGHTING = 4
 
 @dataclass
 class BrainComponent:

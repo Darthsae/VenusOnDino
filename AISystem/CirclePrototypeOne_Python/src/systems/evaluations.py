@@ -1,6 +1,6 @@
 from ..ecs import ECSCoordinator
 from .. import constants
-from ..components.brain_component import BrainComponent, PositionContext, CreatureState
+from ..components.brain_component import BrainComponent, PositionContext, CreatureState, CreatureContext
 from ..components.energy_component import EnergyComponent
 from ..position import Point3D
 
@@ -27,14 +27,23 @@ def updateEvaluations(coordinator: ECSCoordinator):
             elif len(brain_component.entities) > 0:
                 sortation = sorted(brain_component.entities, key=lambda x: x.nutritionByDistance(pos) - x.threatByDistance(pos), reverse=True)[0]
                 if sortation.nutrition > 0:
-                    brain_component.target_creature.setCreature(sortation.id)
-                    brain_component.target_position.setPosition(coordinator.getComponent(sortation.id, constants.POSITION_COMPONENT), PositionContext.FOOD)
+                    if sortation.threat == None:
+                        brain_component.target_creature.setCreature(sortation.id, CreatureContext.EAT)
+                        brain_component.target_position.setPosition(coordinator.getComponent(sortation.id, constants.POSITION_COMPONENT), PositionContext.FOOD)
+                    else:
+                        brain_component.target_creature.setCreature(sortation.id, CreatureContext.FIGHT)
+                        brain_component.target_position.setPosition(coordinator.getComponent(sortation.id, constants.POSITION_COMPONENT), PositionContext.FIGHT)
                 else:
-                    brain_component.target_creature.valid = False
-                    brain_component.target_position.setPosition(pos + Point3D(randint(-12, 12), randint(-12, 12), 5), PositionContext.ROAM)
+                    if sortation.threat > 0:
+                        direction: Point3D = pos - sortation.position
+                        brain_component.target_creature.valid = False
+                        brain_component.target_position.setPosition(pos - Point3D(direction.x, direction.y, 0), PositionContext.SAFETY)
+                    else:
+                        brain_component.target_creature.valid = False
+                        brain_component.target_position.setPosition(pos + Point3D(randint(-12, 12), randint(-12, 12), 0), PositionContext.ROAM)
             else:
                 brain_component.target_creature.valid = False
-                brain_component.target_position.setPosition(pos + Point3D(randint(-12, 12), randint(-12, 12), 5), PositionContext.ROAM)
+                brain_component.target_position.setPosition(pos + Point3D(randint(-12, 12), randint(-12, 12), 0), PositionContext.ROAM)
         elif brain_component.state == CreatureState.SLEEPING:
             if sleepy < 0.1:
                 brain_component.state = CreatureState.AWAKE

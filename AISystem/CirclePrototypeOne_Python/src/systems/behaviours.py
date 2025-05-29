@@ -2,7 +2,8 @@ from ..ecs import ECSCoordinator
 from ..position import Point3D
 from ..components.move_to_target_component import MoveToTargetComponent
 from ..components.eat_target_component import EatTargetComponent
-from ..components.brain_component import BrainComponent, Emoticon
+from ..components.attack_target_component import AttackTargetComponent
+from ..components.brain_component import BrainComponent, Emoticon, CreatureContext
 from ..components.physical_body import PhysicalBody
 from ..components.diet_component import DietComponent
 from ..components.nutrient_source import NutrientSource
@@ -35,7 +36,7 @@ def moveToTarget(coordinator: ECSCoordinator):
 def eatTarget(coordinator: ECSCoordinator):
     for entity_id in coordinator.getEntitiesWithComponent(constants.EAT_TARGET_COMPONENT):
         brain_component: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
-        if brain_component.target_creature.valid and brain_component.target_creature.creature in coordinator.entities:
+        if brain_component.target_creature.valid and brain_component.target_creature.creature in coordinator.entities and brain_component.target_creature.context == CreatureContext.EAT:
             physical_body: PhysicalBody = coordinator.getComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT)
             position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
             entity_pos: Point3D = coordinator.getComponent(brain_component.target_creature.creature, constants.POSITION_COMPONENT)
@@ -76,6 +77,33 @@ def eatTarget(coordinator: ECSCoordinator):
                 energy.current -= eat_target.damage
                 coordinator.setComponent(entity_id, constants.ENERGY_COMPONENT, energy)
 
+def attackTarget(coordinator: ECSCoordinator):
+    for entity_id in coordinator.getEntitiesWithComponent(constants.ATTACK_TARGET_COMPONENT):
+        brain_component: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
+        if brain_component.target_creature.valid and brain_component.target_creature.creature in coordinator.entities and brain_component.target_creature.context == CreatureContext.FIGHT:
+            physical_body: PhysicalBody = coordinator.getComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT)
+            position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
+            entity_pos: Point3D = coordinator.getComponent(brain_component.target_creature.creature, constants.POSITION_COMPONENT)
+            entity_physical_body: PhysicalBody = coordinator.getComponent(brain_component.target_creature.creature, constants.PHYSICAL_BODY_COMPONENT)
+            size_modification = entity_physical_body.size
+            health: HealthComponent = coordinator.getComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT)
+            if coordinator.hasComponent(brain_component.target_creature.creature, constants.SIZE_HEALTH_COMPONENT):
+                size_modification *= health.current / health.max
+            if entity_pos.distSQ(position) <= (size_modification + physical_body.size) ** 2:
+                attack_target: AttackTargetComponent = coordinator.getComponent(entity_id, constants.ATTACK_TARGET_COMPONENT)
+                distance_to_target = entity_pos - position
+                if distance_to_target.magnitude() != 0:
+                    direction: Point3D = distance_to_target.norm()
+                    angle = math.degrees(math.atan2(direction.y, direction.x))
+                    physical_body.rotation = 270 - angle
+                    coordinator.setComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT, physical_body)
+                brain_component.emoticon = Emoticon.FIGHTING
+                health.current = min(max(health.current - attack_target.damage, 0), health.max)
+                coordinator.setComponent(brain_component.target_creature.creature, constants.HEALTH_COMPONENT, health)
+                coordinator.setComponent(brain_component.target_creature.creature, constants.DAMAGED_COMPONENT, (255, 0, 0))
+                energy: EnergyComponent = coordinator.getComponent(entity_id, constants.ENERGY_COMPONENT)
+                energy.current -= attack_target.damage / 2
+                coordinator.setComponent(entity_id, constants.ENERGY_COMPONENT, energy)
 
 def brainValidate(coordinator: ECSCoordinator):
     for entity_id in coordinator.getEntitiesWithComponent(constants.BRAIN_COMPONENT):

@@ -15,6 +15,7 @@ nom_nom: TextureData
 sleepy: TextureData
 thirst_trap: TextureData
 boot_coprolite: TextureData
+warfare: TextureData
 
 tile_types: list[TileType] = [
     TileType("Dirt", (236, 184, 138), TextureData.load("../../Assets/Textures/PixelArt/TopDown/Dirt.png"), PhysicalState.SOLID, [
@@ -26,7 +27,7 @@ tile_types: list[TileType] = [
 ]
 
 species_types: list[Species] = [
-    Species("Test", (0, 255, 255), 0, 1, 10, 500, 1, 10, 0.25, 0, 0, {NutrientType.PROTEIN: 200}, [
+    Species("Goat", (0, 255, 255), 0, 1, 10, 500, 1, 10, 0.25, 0, 0, {NutrientType.PROTEIN: 200}, [
         NutrientStat(NutrientType.FIBER, 0.1, 12.0, 0.015, 0.25),
         NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 30.0)
     ], 10, 0.1, False, [
@@ -57,8 +58,8 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 1200, 1200, (1.5, 0, 1, 60, -160, 25, 0.01, 1)),
-    Species("Shrub", (0, 255, 0), 2, 2, 2, 600, 0, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 125}, [], -1, 0, True, [
+    ], 1200, 1200, (1.5, 0, 1, 60, -160, 25, 0.01, 1), 1),
+    Species("Shrub", (0, 255, 0), 2, 2, 2, 800, 0, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 125}, [], -1, 0, True, [
         "health",
         "size_health",
         "growth",
@@ -66,8 +67,8 @@ species_types: list[Species] = [
         "reproduce"
     ], [], [
         ("remove_entity", True)
-    ], 0, 0, (12.5, 1, 1, 300, -40, 0, 0.15, -1)),
-    Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0.8, 0, 0, {NutrientType.PROTEIN: 225}, [
+    ], 0, 0, (12.5, 1, 1, 60, -160, 0, 0.045, -1), 0),
+    Species("Tyrant", (155, 0, 0), 1, 3.5, 10, 750, 1, 10, 0.8, 0, 0, {NutrientType.PROTEIN: 225}, [
         NutrientStat(NutrientType.PROTEIN, 0.1, 300.0, 0.005, 25),
         NutrientStat(NutrientType.WATER, 0.01, 150.0, 0.001, 15)
     ], 15, 0.75, False, [
@@ -98,7 +99,39 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 6000, 6000, (1.5, 2, 1, 120, -120, 25, 0.01, 1)),
+    ], 6000, 6000, (1.5, 2, 1, 120, -120, 25, 0.01, 1), 50),
+    Species("Trumpet", (0, 255, 255), 5, 3.0, 10, 450, 1, 10, 0.25, 0, 0, {NutrientType.PROTEIN: 250}, [
+        NutrientStat(NutrientType.FIBER, 0.1, 25.0, 0.025, 0.25),
+        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 30.0)
+    ], 10, 0.5, False, [
+        "brain",
+        "sight",
+        "diet",
+        "health",
+        "eat_target",
+        "move_to_target",
+        "remove_health",
+        "energy",
+        "reproduce"
+    ], [
+        EvaluatorInstance(2, {
+            "threat": [
+                "eat_target"
+            ]
+        }),
+        EvaluatorInstance(0, {}),
+        EvaluatorInstance(1, {})
+    ], [
+        ("textured", TexturedComponent(3)),
+        ("physical_buzz", ([
+            "textured"
+        ], [
+            ("remove_entity", True),
+        ])),
+        ("timer", TimerComponent(0, 720, [], [
+            ("textured", TexturedComponent(4))
+        ]))
+    ], 1800, 1800, (1.5, 3, 4, 120, -180, 25, 0.01, 1), 10),
 ]
 
 evaluator_types: list = [
@@ -163,6 +196,8 @@ def componentPull(id: str):
             return TIMER_COMPONENT
         case "reproduce":
             return REPRODUCE_COMPONENT
+        case "attack_target":
+            return ATTACK_TARGET_COMPONENT
 
 POSITION_COMPONENT: component
 PHYSICAL_BODY_COMPONENT: component
@@ -189,6 +224,7 @@ ENERGY_COMPONENT: component
 DAMAGED_COMPONENT: component
 TIMER_COMPONENT: component
 REPRODUCE_COMPONENT: component
+ATTACK_TARGET_COMPONENT: component
 
 DRAW_CIRCLES: bool = False
 DRAW_SPRITES: bool = True

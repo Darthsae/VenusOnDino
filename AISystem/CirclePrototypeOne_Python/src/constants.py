@@ -95,7 +95,7 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 6000, 6000, None),
+    ], 6000, 6000, (1.5, 2, 1, 120, -120, 25, 0.01, True)),
 ]
 
 evaluator_types: list = [

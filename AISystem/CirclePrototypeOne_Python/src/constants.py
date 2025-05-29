@@ -37,7 +37,8 @@ species_types: list[Species] = [
         "eat_target",
         "move_to_target",
         "remove_health",
-        "energy"
+        "energy",
+        "reproduce"
     ], [
         EvaluatorInstance(2, {
             "threat": [
@@ -61,10 +62,11 @@ species_types: list[Species] = [
         "health",
         "size_health",
         "growth",
-        "remove_health"
+        "remove_health",
+        "reproduce"
     ], [], [
         ("remove_entity", True)
-    ], 0, 0, (12.5, 1, 1, 300, -250, 0, 0.15, -1)),
+    ], 0, 0, (12.5, 1, 1, 300, -40, 0, 0.15, -1)),
     Species("Carn", (155, 0, 0), 1, 3.5, 10, 500, 1, 10, 0.8, 0, 0, {NutrientType.PROTEIN: 225}, [
         NutrientStat(NutrientType.PROTEIN, 0.1, 300.0, 0.005, 25),
         NutrientStat(NutrientType.WATER, 0.01, 150.0, 0.001, 15)
@@ -76,7 +78,8 @@ species_types: list[Species] = [
         "eat_target",
         "move_to_target",
         "remove_health",
-        "energy"
+        "energy",
+        "reproduce"
     ], [
         EvaluatorInstance(2, {
             "threat": [

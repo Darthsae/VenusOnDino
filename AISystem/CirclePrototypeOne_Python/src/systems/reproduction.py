@@ -39,7 +39,7 @@ def updateReproduction(coordinator: ECSCoordinator, terrain: Terrain):
                             success = True
                             break
                         elif reproduce_component.others == -1:
-                            mod *= 0.25
+                            mod *= 0.9
                 if not success:
                     continue
 

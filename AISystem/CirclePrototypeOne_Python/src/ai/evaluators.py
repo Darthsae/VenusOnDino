@@ -48,7 +48,7 @@ def sizeThreatEvaluator(coordinator: ECSCoordinator, entity_id: entity, brain: B
     physical_body: PhysicalBody = coordinator.getComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT)
     for i, entity_instance in enumerate(brain.entities):
         if brain.entities[i].threat != None:
-            brain.entities[i].threat += (coordinator.getComponent(entity_instance.id, constants.PHYSICAL_BODY_COMPONENT).size - physical_body.size) * data.get("modifier", 1.0)
+            brain.entities[i].threat += (coordinator.getComponent(entity_instance.id, constants.PHYSICAL_BODY_COMPONENT).size - physical_body.size) * data.get("modifier", 1.0) * 10000
 
 def componentEvaluator(coordinator: ECSCoordinator, entity_id: entity, brain: BrainComponent, data: dict[str, Any]):
     components: list[component] = map(constants.componentPull, data["threat"])

@@ -104,8 +104,8 @@ evaluator_types: list = [
     componentEvaluator
 ]
 
-METERS_PER_TILE: int = 8
-PIXELS_PER_METER: int = 8
+METERS_PER_TILE: int = 2
+PIXELS_PER_METER: int = 24
 PIXELS_PER_TILE: int = METERS_PER_TILE * PIXELS_PER_METER
 
 def componentPull(id: str):

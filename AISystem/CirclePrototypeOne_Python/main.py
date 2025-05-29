@@ -4,7 +4,7 @@ from pygame_gui.elements import UILabel, UIPanel, UIProgressBar, UIHorizontalSli
 from src.world.terrain import Terrain
 from src.position import Point2D, Point3D
 from src.ecs import ECSCoordinator
-from src.systems.rendering import renderCircles, renderTextures, renderTerrain, renderSight, renderEmoticons
+from src.systems.rendering import renderCircles, renderTextures, renderTerrainTextures, renderSight, renderEmoticons
 from src.systems.debug import randomMovement
 from src.systems.senses import senseSight
 from src.systems.memory import workingMemory, assosciativeMemory
@@ -71,7 +71,7 @@ def main():
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Tyrant.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Plant.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Meat.png"),
-        TextureData.load("../../Assets/Textures/PixelArt/TopDown/RottenMeat.png")
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/RottenMeat.png"),
     ]
 
     constants.sleepy = TextureData.load("../../Assets/Textures/PixelArt/TopDown/Sleeping.png")
@@ -109,7 +109,7 @@ def main():
     one_step = UIButton(pygame.Rect(3, 133, 116, 26), "One Step", manager, panel.get_container(), command=marchStep)
     fps_slider_label = UILabel(pygame.Rect(3, 159, 116, 26), f"FPS Cap: {constants.FPS}", manager, panel.get_container())
     fps_slider = UIHorizontalSlider(pygame.Rect(3, 182, 116, 26), constants.FPS, (1, 600), manager, panel.get_container())
-    moo_slider = UIHorizontalSlider(pygame.Rect(3, 208, 116, 26), constants.PIXELS_PER_METER, (1, 100), manager, panel.get_container())
+    moo_slider = UIHorizontalSlider(pygame.Rect(3, 208, 116, 26), constants.PIXELS_PER_METER, (1, 32), manager, panel.get_container())
 
     running: bool = True
 
@@ -210,7 +210,7 @@ def main():
         screen.fill((32, 48, 64))
         entities = {tup for tup in terrain.entities.query((camera.scaleBy(1, 1, 0) - terrain.position), (camera.scaleBy(1, 1, 0) + Point3D(viewport.x // constants.PIXELS_PER_METER, viewport.y // constants.PIXELS_PER_METER, terrain.TERRAIN_SIZE * constants.METERS_PER_TILE) - terrain.position)) if tup[1] in coordinator.entities}
         if constants.DRAW_TERRAIN:
-            renderTerrain(coordinator, screen, camera, viewport, terrain)
+            renderTerrainTextures(coordinator, screen, camera, viewport, terrain)
         if constants.DRAW_CIRCLES:
             renderCircles(coordinator, screen, camera, viewport, terrain, entities)
         if constants.DRAW_SIGHT:

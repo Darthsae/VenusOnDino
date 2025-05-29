@@ -13,11 +13,12 @@ textures: list[TextureData] = []
 sleepy: TextureData
 
 tile_types: list[TileType] = [
-    TileType("Dirt", (168, 84, 0), PhysicalState.SOLID),
-    TileType("Water", (0, 0, 200), PhysicalState.LIQUID, [
-        ("nutrient_source", NutrientSource({NutrientType.WATER: 1000}))
+    TileType("Dirt", (236, 184, 138), TextureData.load("../../Assets/Textures/PixelArt/TopDown/Dirt.png"), PhysicalState.SOLID, [
     ]),
-    TileType("Air", (255, 255, 255), PhysicalState.GAS)
+    TileType("Water", (36, 150, 210), TextureData.load("../../Assets/Textures/PixelArt/TopDown/Water.png"), PhysicalState.LIQUID, [
+        ("nutrient_source", NutrientSource({NutrientType.WATER: 1000})),
+    ]),
+    TileType("Air", (255, 255, 255), None, PhysicalState.GAS)
 ]
 
 species_types: list[Species] = [

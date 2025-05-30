@@ -1,4 +1,4 @@
-import pygame, pygame_gui, random, io, pstats, cProfile
+import pygame, pygame_gui, random, io, pstats, cProfile, time
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIPanel, UIHorizontalSlider, UIButton
 from src.world.terrain import Terrain
@@ -178,10 +178,12 @@ def main():
         if constants.RUNNING:
             if stutter_double:
                 # MISC
-                timerUpdate(coordinator)
                 updateNutrients(coordinator)
                 updateEnergy(coordinator)
+            else:
+                timerUpdate(coordinator)
                 growth(coordinator)
+
             
             match stutter_thirty:
                 case 0:
@@ -189,12 +191,12 @@ def main():
                     emoteReset(coordinator)
                     senseSight(coordinator, terrain)
                 case 10:
-                    epoch(coordinator)
+                    #epoch(coordinator)
                     damagedComponent(coordinator)
                     entity_label.set_text(f"Entities: {len(coordinator.entities)}")
                     # Memory
-                    workingMemory(coordinator)
-                    assosciativeMemory(coordinator)
+                    # workingMemory(coordinator)
+                    # assosciativeMemory(coordinator)
                 case 20:
                     # Evaluators
                     updateEvaluations(coordinator)
@@ -236,7 +238,7 @@ def main():
         # Rendering
         screen.fill((32, 48, 64))
         if constants.DRAW_TERRAIN:
-                renderTerrainTextures(screen, camera, viewport, terrain)
+            renderTerrainTextures(screen, camera, viewport, terrain)
         if constants.DRAW_EMOTES or constants.DRAW_DIET or constants.DRAW_SPRITES or constants.DRAW_SIGHT or constants.DRAW_CIRCLES:
             entities = terrain.entities.query((camera.scaleBy(1, 1, 0) - terrain.position), (camera.scaleBy(1, 1, 0) + Point3D(viewport.x // constants.PIXELS_PER_METER, viewport.y // constants.PIXELS_PER_METER, terrain.TERRAIN_SIZE * constants.METERS_PER_TILE) - terrain.position))
             
@@ -267,4 +269,8 @@ def main():
         #    print(s.getvalue())        
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        with open(f"crash_log_{time.time_ns()}.log") as f:
+            f.write(e)

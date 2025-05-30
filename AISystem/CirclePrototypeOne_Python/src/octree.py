@@ -20,14 +20,16 @@ class OctreeNode[T]:
         self.position = position
         self.half_size = half_size
         self.depth = depth
+        self.lower = self.position - Point3D.fromUniform(self.half_size)
+        self.upper = self.position + Point3D.fromUniform(self.half_size)
     
     def query(self, lower_point: Point3D, higher_point: Point3D) -> set[tuple[Point3D, T]]:
-        if (self.position.x - self.half_size > higher_point.x or
-            self.position.x + self.half_size < lower_point.x or
-            self.position.y - self.half_size > higher_point.y or
-            self.position.y + self.half_size < lower_point.y or
-            self.position.z - self.half_size > higher_point.z or
-            self.position.z + self.half_size < lower_point.z):
+        if (self.lower.x > higher_point.x or
+            self.upper.x < lower_point.x or
+            self.lower.y > higher_point.y or
+            self.upper.y < lower_point.y or
+            self.lower.z > higher_point.z or
+            self.upper.z < lower_point.z):
             return set()
         elif self.children[0] == None:
             return {(pos, child) for pos, child in self.occupants.items() if (lower_point.x <= pos.x <= higher_point.x and
@@ -40,9 +42,9 @@ class OctreeNode[T]:
             return to_return
     
     def insert(self, position: Point3D, data: T):
-        if not (self.position.x - self.half_size <= position.x <= self.position.x + self.half_size and
-                self.position.y - self.half_size <= position.y <= self.position.y + self.half_size and
-                self.position.z - self.half_size <= position.z <= self.position.z + self.half_size):
+        if not (self.lower.x <= position.x <= self.upper.x and
+                self.lower.y <= position.y <= self.upper.y and
+                self.lower.z <= position.z <= self.upper.z):
             return
         elif self.children[0] == None:
             self.occupants[position] = data
@@ -65,9 +67,9 @@ class OctreeNode[T]:
             self.children[x + y * 2 + z * 4].insert(position, data)
     
     def pop(self, position: Point3D) -> bool:
-        if not (self.position.x - self.half_size <= position.x <= self.position.x + self.half_size and
-                self.position.y - self.half_size <= position.y <= self.position.y + self.half_size and
-                self.position.z - self.half_size <= position.z <= self.position.z + self.half_size):
+        if not (self.lower.x <= position.x <= self.upper.x and
+                self.lower.y <= position.y <= self.upper.y and
+                self.lower.z <= position.z <= self.upper.z):
             return False
         elif self.children[0] == None:
             return self.occupants.pop(position, None) != None

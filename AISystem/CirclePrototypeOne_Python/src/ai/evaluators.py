@@ -49,7 +49,7 @@ def foodEvaluator(coordinator: ECSCoordinator, entity_id: entity, brain: BrainCo
                 nutrient_value += nutrient_need * nutrient_consumption * nutrient_density * volume
         brain.entities[i].nutrition = nutrient_value
     
-    brain.must_roam = any(crucial is True for crucial in diet.crucial.values())
+    brain.must_roam = not any(crucial is True for crucial in diet.crucial.values()) and len(diet.crucial) > 0
 
 def sizeThreatEvaluator(coordinator: ECSCoordinator, entity_id: entity, brain: BrainComponent, data: dict[str, Any]):
     physical_body: PhysicalBody = coordinator.getComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT)

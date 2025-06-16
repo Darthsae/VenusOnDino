@@ -59,7 +59,7 @@ def main():
     species_amounts = [
         150,
         800,
-        25,
+        10,
         75
     ]
     for species_index, species_count in enumerate(species_amounts):

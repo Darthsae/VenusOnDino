@@ -40,7 +40,7 @@ def updateEvaluations(coordinator: ECSCoordinator):
                     brain_component.attacker = -1
             elif len(brain_component.entities) > 0:
                 sortation = sorted(brain_component.entities, key=lambda x: x.nutritionByDistance(pos) - x.threatByDistance(pos), reverse=True)[0]
-                if sortation.nutrition > 0:
+                if sortation.nutrition != None and sortation.nutrition > 0:
                     #print(f"Nutrition -> {sortation.id}")
                     if sortation.threat == None:
                         #print(f"{entity_id} is eating {sortation.id}")

@@ -9,7 +9,7 @@ from src.systems.senses import senseSight
 from src.systems.memory import workingMemory, assosciativeMemory
 from src.systems.needs import updateNutrients, updateEnergy, damagedComponent
 from src.systems.evaluations import updateEvaluations
-from src.systems.behaviours import moveToTarget, eatTarget, brainValidate, epoch, emoteReset, attackTarget
+from src.systems.behaviours import moveToTarget, eatTarget, brainValidate, epoch, emoteReset, attackTarget, dinoDread, monkey
 from src.systems.growth import growth
 from src.systems.remove_components import updateRemoveComponent, updateRemoveEntity, updateAddComponent, updateSizeEntity
 from src.systems.timer import timerUpdate
@@ -38,6 +38,8 @@ def main():
     constants.MOVE_TO_TARGET_COMPONENT = coordinator.registerComponent()
     constants.GROWTH_COMPONENT = coordinator.registerComponent()
     constants.NUTRIENT_SOURCE_COMPONENT = coordinator.registerComponent()
+    constants.SOIL_SOURCE_COMPONENT = coordinator.registerComponent()
+    constants.SOIL_NEEDER_COMPONENT = coordinator.registerComponent()
     constants.EAT_TARGET_COMPONENT = coordinator.registerComponent()
     constants.SIZE_HEALTH_COMPONENT = coordinator.registerComponent()
     constants.REMOVE_HEALTH_COMPONENT = coordinator.registerComponent()
@@ -194,6 +196,8 @@ def main():
                     #epoch(coordinator)
                     damagedComponent(coordinator)
                     entity_label.set_text(f"Entities: {len(coordinator.entities)}")
+                    dinoDread(coordinator)
+                    monkey(coordinator)
                     # Memory
                     # workingMemory(coordinator)
                     # assosciativeMemory(coordinator)

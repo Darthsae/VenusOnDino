@@ -17,7 +17,7 @@ from ..components.energy_component import EnergyComponent
 from ..components.reproduce_component import ReproduceComponent
 from ..components.attack_target_component import AttackTargetComponent
 from .. import constants
-import random
+import random, opensimplex, numpy
 
 class Terrain:
     TERRAIN_SIZE: int = 100
@@ -67,7 +67,7 @@ class Terrain:
     def spoof(self):
         for y in range(Terrain.TERRAIN_SIZE):
             for x in range(Terrain.TERRAIN_SIZE):
-                self.columns[y][x].layers = [ColumnLayerData(random.randint(0, 1), 0)]
+                self.columns[y][x].layers = [ColumnLayerData(1 if opensimplex.noise2(x * 0.02, y * 0.02) > 0.25 else 0, 0)]
 
     def addEntity(self, coordinator: ECSCoordinator, position: Point3D, species: int) -> entity:
         new_entity = coordinator.createEntity()
@@ -104,4 +104,6 @@ class Terrain:
             coordinator.setComponent(new_entity, constants.REPRODUCE_COMPONENT, ReproduceComponent(reproduction_data[0], reproduction_data[1], reproduction_data[2], reproduction_data[3], reproduction_data[4], reproduction_data[5], reproduction_data[6], reproduction_data[7]))
         if constants.species_types[species].damage > 0:
             coordinator.setComponent(new_entity, constants.ATTACK_TARGET_COMPONENT, AttackTargetComponent(constants.species_types[species].damage))
+        if constants.species_types[species].soil > 0:
+            coordinator.setComponent(new_entity, constants.SOIL_NEEDER_COMPONENT, constants.species_types[species].soil)
         return new_entity

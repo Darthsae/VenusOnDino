@@ -19,6 +19,7 @@ warfare: TextureData
 
 tile_types: list[TileType] = [
     TileType("Dirt", (236, 184, 138), TextureData.load("../../Assets/Textures/PixelArt/TopDown/Dirt.png"), PhysicalState.SOLID, [
+        ("soil_source", 1.0),
     ]),
     TileType("Water", (36, 150, 210), TextureData.load("../../Assets/Textures/PixelArt/TopDown/Water.png"), PhysicalState.LIQUID, [
         ("nutrient_source", NutrientSource({NutrientType.WATER: 200})),
@@ -60,7 +61,7 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 1200, 1200, (1.5, 0, 1, 60, -160, 25, 0.01, 1), 1),
+    ], 1200, 1200, (1.5, 0, 1, 60, -160, 25, 0.01, 1), 1, 0),
     Species("Shrub", (0, 255, 0), 2, 2, 2, 800, 0, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 125}, [], -1, 0, True, [
         "health",
         "size_health",
@@ -69,7 +70,7 @@ species_types: list[Species] = [
         "reproduce"
     ], [], [
         ("remove_entity", True)
-    ], 0, 0, (12.5, 1, 1, 60, -160, 0, 0.045, -1), 0),
+    ], 0, 0, (12.5, 1, 1, 60, -160, 0, 0.045, -1), 0, 0.001),
     Species("Tyrant", (155, 0, 0), 1, 3.5, 10, 750, 1, 10, 0.8, 0, 0, {NutrientType.PROTEIN: 225}, [
         NutrientStat(NutrientType.PROTEIN, 0.1, 300.0, 0.005, 25),
         NutrientStat(NutrientType.WATER, 0.01, 150.0, 0.001, 15)
@@ -90,7 +91,7 @@ species_types: list[Species] = [
                 "eat_target"
             ]
         }),
-        EvaluatorInstance(3, {}),
+        EvaluatorInstance(3, {"modifier": 350}),
         EvaluatorInstance(0, {}),
         EvaluatorInstance(1, {})
     ], [
@@ -103,7 +104,7 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 6000, 6000, (1.5, 2, 1, 120, -120, 25, 0.01, 1), 50),
+    ], 6000, 6000, (1.5, 2, 1, 120, -120, 25, 0.01, 1), 50, 0),
     Species("Trumpet", (0, 255, 255), 5, 3.0, 10, 450, 1, 10, 0.25, 0, 0, {NutrientType.PROTEIN: 250}, [
         NutrientStat(NutrientType.FIBER, 0.1, 25.0, 0.025, 0.25),
         NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 30.0)
@@ -137,7 +138,7 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 1800, 1800, (1.5, 3, 4, 120, -180, 25, 0.01, 1), 10),
+    ], 1800, 1800, (1.5, 3, 4, 120, -180, 25, 0.01, 1), 10, 0),
 ]
 
 evaluator_types: list = [
@@ -181,6 +182,10 @@ def componentPull(id: str):
             return GROWTH_COMPONENT
         case "nutrient_source":
             return NUTRIENT_SOURCE_COMPONENT
+        case "soil_source":
+            return SOIL_SOURCE_COMPONENT
+        case "soil_needer":
+            return SOIL_NEEDER_COMPONENT
         case "eat_target":
             return EAT_TARGET_COMPONENT
         case "size_health":
@@ -220,6 +225,8 @@ HEALTH_COMPONENT: component
 MOVE_TO_TARGET_COMPONENT: component
 GROWTH_COMPONENT: component
 NUTRIENT_SOURCE_COMPONENT: component
+SOIL_SOURCE_COMPONENT: component
+SOIL_NEEDER_COMPONENT: component
 EAT_TARGET_COMPONENT: component
 SIZE_HEALTH_COMPONENT: component
 REMOVE_HEALTH_COMPONENT: component

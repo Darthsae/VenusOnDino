@@ -9,6 +9,7 @@ from ..components.diet_component import DietComponent
 from ..components.nutrient_source import NutrientSource
 from ..components.health_component import HealthComponent
 from ..components.energy_component import EnergyComponent
+from ..world.terrain import Terrain
 from .. import constants
 import math, random
 
@@ -131,3 +132,29 @@ def emoteReset(coordinator: ECSCoordinator):
     for entity_id in coordinator.getEntitiesWithComponent(constants.BRAIN_COMPONENT):
         brain_component: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
         brain_component.emoticon = Emoticon.NONE
+
+def dinoDread(coordinator: ECSCoordinator, terrain: Terrain):
+    for entity_id in coordinator.getEntitiesWithComponent(constants.DIET_COMPONENT):
+        diet_component: DietComponent = coordinator.getComponent(entity_id, constants.DIET_COMPONENT)
+        if diet_component.nutrients[0].current >= diet_component.nutrients[0].maximum * 0.99:
+            position_component: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
+            quetzoloatl = terrain.entities.query(position_component - Point3D(4, 4, 4), position_component + Point3D(4, 4, 4))
+            for quack, quirk in quetzoloatl:
+                if coordinator.hasComponent(quirk, constants.SOIL_SOURCE_COMPONENT):
+                    soil_source: float = coordinator.getComponent(quirk, constants.SOIL_SOURCE_COMPONENT)
+                    soil_source += 0.1
+                    coordinator.setComponent(quirk, constants.SOIL_SOURCE_COMPONENT, soil_source)
+
+def monkey(coordinator: ECSCoordinator, terrain: Terrain):
+    for entity_id in coordinator.getEntitiesWithComponent(constants.SOIL_NEEDER_COMPONENT):
+        diet_component: float = coordinator.getComponent(entity_id, constants.SOIL_NEEDER_COMPONENT)
+        position_component: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
+        quetzoloatl = terrain.entities.query(position_component - Point3D(4, 4, 4), position_component + Point3D(4, 4, 4))
+        for quack, quirk in quetzoloatl:
+            if coordinator.hasComponent(quirk, constants.SOIL_SOURCE_COMPONENT):
+                soil_source: float = coordinator.getComponent(quirk, constants.SOIL_SOURCE_COMPONENT)
+                soil_source -= diet_component
+                coordinator.setComponent(quirk, constants.SOIL_SOURCE_COMPONENT, soil_source)
+                return
+        health_comp: HealthComponent = coordinator.getComponent(entity_id, constants.HEALTH_COMPONENT)
+        health_comp.current -= 10

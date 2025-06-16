@@ -196,8 +196,8 @@ def main():
                     #epoch(coordinator)
                     damagedComponent(coordinator)
                     entity_label.set_text(f"Entities: {len(coordinator.entities)}")
-                    dinoDread(coordinator)
-                    monkey(coordinator)
+                    dinoDread(coordinator, terrain)
+                    monkey(coordinator, terrain)
                     # Memory
                     # workingMemory(coordinator)
                     # assosciativeMemory(coordinator)

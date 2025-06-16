@@ -10,6 +10,8 @@ class ECSCoordinator:
         self.__components: dict[component, dict[entity, Any]] = {}
         self.__next_entity_id: int = 0
         self.__next_component_id: int = 0
+        self.__dirty_components: set[component] = set()
+        self.__cahce: dict[component, set[entity]] = {}
     
     def createEntity(self) -> entity:
         entity_id: entity = entity(self.__next_entity_id)
@@ -22,6 +24,7 @@ class ECSCoordinator:
         components: set[component] = self.entities.pop(entity_id)
         for component_id in components:
             self.__components[component_id].pop(entity_id)
+            self.__dirty_components |= {component_id}
         if entity_id < self.__next_entity_id:
             self.__next_entity_id = entity_id
 
@@ -35,12 +38,14 @@ class ECSCoordinator:
     def setComponent[T](self, entity_id: entity, component_id: component, data: T):
         self.__components[component_id][entity_id] = data
         self.entities[entity_id] |= {component_id}
+        self.__dirty_components |= {component_id}
 
     def removeComponents(self, entity_id: entity, components: set[component]):
         self.entities[entity_id] -= components
         for component in components:
             #print(component)
             self.__components[component].pop(entity_id)
+            self.__dirty_components |= {component}
 
     def hasComponent(self, entity_id: entity, component_id: component) -> bool:
         return component_id in self.entities[entity_id]
@@ -49,4 +54,9 @@ class ECSCoordinator:
         return self.__components[component_id][entity_id]
 
     def getEntitiesWithComponent(self, component_id: component) -> set[entity]:
-        return set(self.__components[component_id].keys())
+        if component_id not in self.__cahce:
+            self.__cahce[component_id] = set(self.__components[component_id].keys())
+        elif component_id in self.__dirty_components:
+            self.__cahce[component_id] = set(self.__components[component_id].keys())
+            self.__dirty_components.remove(component_id)
+        return self.__cahce[component_id]

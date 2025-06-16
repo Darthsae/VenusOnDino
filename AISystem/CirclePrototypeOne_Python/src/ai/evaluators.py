@@ -59,6 +59,8 @@ def sizeThreatEvaluator(coordinator: ECSCoordinator, entity_id: entity, brain: B
 
 def attackThreatEvaluator(coordinator: ECSCoordinator, entity_id: entity, brain: BrainComponent, data: dict[str, Any]):
     health: HealthComponent = coordinator.getComponent(entity_id, constants.HEALTH_COMPONENT)
+    if health.current == 0:
+        return
     for i, _ in enumerate(brain.entities):
         if brain.entities[i].threat != None and coordinator.hasComponent(brain.entities[i].id, constants.ATTACK_TARGET_COMPONENT):
             brain.entities[i].threat += (coordinator.getComponent(brain.entities[i].id, constants.ATTACK_TARGET_COMPONENT).damage / health.current) * data.get("modifier", 1.0) * 10000

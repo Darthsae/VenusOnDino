@@ -8,7 +8,7 @@ from src.systems.rendering import renderCircles, renderTextures, renderTerrainTe
 from src.systems.senses import senseSight
 from src.systems.memory import workingMemory, assosciativeMemory
 from src.systems.needs import updateNutrients, updateEnergy, damagedComponent
-from src.systems.evaluations import updateEvaluations
+from src.systems.evaluations import updateEvaluationsOld
 from src.systems.behaviours import moveToTarget, eatTarget, brainValidate, epoch, emoteReset, attackTarget, dinoDread, monkey
 from src.systems.growth import growth
 from src.systems.remove_components import updateRemoveComponent, updateRemoveEntity, updateAddComponent, updateSizeEntity
@@ -203,7 +203,7 @@ def main():
                     # assosciativeMemory(coordinator)
                 case 20:
                     # Evaluators
-                    updateEvaluations(coordinator)
+                    updateEvaluationsOld(coordinator)
             
             match stutter_triple:
                 case 0:

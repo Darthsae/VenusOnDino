@@ -1,6 +1,7 @@
 from .tile import ColumnLayerData
 from .tile_column import TileColumn
 from ..octree import OctreeNode, Point3D
+from ..quad_struct import QuadStruct, Point2D
 from ..position import Point2D
 from ..ecs import ECSCoordinator, entity
 from ..components.physical_body import PhysicalBody
@@ -27,8 +28,10 @@ class Terrain:
         self.position = position
         self.columns: list[list[TileColumn]] = [[TileColumn() for _ in range(Terrain.TERRAIN_SIZE)] for _ in range(Terrain.TERRAIN_SIZE)]
         self.entities: OctreeNode[entity] = OctreeNode[entity](Point3D(Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE, Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE, Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE), Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE)
+        self.tiles: OctreeNode[entity] = OctreeNode[entity](Point3D(Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE, Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE, Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE), Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE)
         self.smells: OctreeNode[Point2D] = OctreeNode[Point2D](Point3D(Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE, Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE, Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE), Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE)
-    
+        self.soil: QuadStruct = QuadStruct(Point2D(Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE, Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE), Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE)
+
     def regenerateEntityQuadtree(self, coordinator: ECSCoordinator):
         self.entities: OctreeNode[entity] = OctreeNode[entity](Point3D(Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE, Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE, Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE), Terrain.TERRAIN_HALF_SIZE * constants.METERS_PER_TILE)
         for x in range(Terrain.TERRAIN_SIZE):
@@ -41,6 +44,7 @@ class Terrain:
                         coordinator.setComponent(tile_entity, constants.componentPull(component_type), component_data)
                     coordinator.setComponent(tile_entity, constants.POSITION_COMPONENT, Point3D((x + 0.5) * constants.METERS_PER_TILE, (y + 0.5) * constants.METERS_PER_TILE, 2))
                     coordinator.setComponent(tile_entity, constants.PHYSICAL_BODY_COMPONENT, PhysicalBody(100, constants.METERS_PER_TILE / 2))
+                    #self.tiles.insert(Point3D((x + 0.5) * constants.METERS_PER_TILE, (y + 0.5) * constants.METERS_PER_TILE, 2), tile_entity)
         
         for entity_id in coordinator.getEntitiesWithComponent(constants.POSITION_COMPONENT):
             position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
@@ -67,7 +71,7 @@ class Terrain:
     def spoof(self):
         for y in range(Terrain.TERRAIN_SIZE):
             for x in range(Terrain.TERRAIN_SIZE):
-                self.columns[y][x].layers = [ColumnLayerData(1 if opensimplex.noise2(x * 0.02, y * 0.02) > 0.25 else 0, 0)]
+                self.columns[y][x].layers = [ColumnLayerData(1 if (opensimplex.noise2(x * 0.07, y * 0.07) - 0.25 * opensimplex.noise2(25 + y * 0.15, 25 + x * 0.15)) > 0.25 else 0, 0)]
 
     def addEntity(self, coordinator: ECSCoordinator, position: Point3D, species: int) -> entity:
         new_entity = coordinator.createEntity()

@@ -12,6 +12,14 @@ def updateEvaluations(coordinator: ECSCoordinator):
         energon: EnergyComponent = coordinator.getComponent(entity_id, constants.ENERGY_COMPONENT)
 
         sleepy = (energon.max - energon.current) / energon.max
+        
+
+def updateEvaluationsOld(coordinator: ECSCoordinator):
+    for entity_id in coordinator.getEntitiesWithComponent(constants.BRAIN_COMPONENT):
+        brain_component: BrainComponent = coordinator.getComponent(entity_id, constants.BRAIN_COMPONENT)
+        energon: EnergyComponent = coordinator.getComponent(entity_id, constants.ENERGY_COMPONENT)
+
+        sleepy = (energon.max - energon.current) / energon.max
         if brain_component.state == CreatureState.AWAKE:
             pos = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
             for evaluator in brain_component.evaluators:

@@ -153,6 +153,8 @@ def main():
 
     running: bool = True
 
+    timerea: float = 0
+
     stutter_double: bool = True
     stutter_triple: int = 0
     stutter_thirty: int = 0
@@ -169,20 +171,20 @@ def main():
             match event.type:
                 case pygame.QUIT:
                     running = False
-                case pygame.KEYDOWN:
-                    match event.key:
-                        case pygame.K_LEFT:
-                            camera.x -= MOVEMENT_AMOUNT
-                            position_label.set_text(f"Camera: {camera.x}, {camera.y}")
-                        case pygame.K_RIGHT:
-                            camera.x += MOVEMENT_AMOUNT
-                            position_label.set_text(f"Camera: {camera.x}, {camera.y}")
-                        case pygame.K_DOWN:
-                            camera.y += MOVEMENT_AMOUNT
-                            position_label.set_text(f"Camera: {camera.x}, {camera.y}")
-                        case pygame.K_UP:
-                            camera.y -= MOVEMENT_AMOUNT
-                            position_label.set_text(f"Camera: {camera.x}, {camera.y}")
+                #case pygame.KEYDOWN:
+                #    match event.key:
+                #        case pygame.K_LEFT:
+                #            camera.x -= MOVEMENT_AMOUNT
+                #            position_label.set_text(f"Camera: {camera.x}, {camera.y}")
+                #        case pygame.K_RIGHT:
+                #            camera.x += MOVEMENT_AMOUNT
+                #            position_label.set_text(f"Camera: {camera.x}, {camera.y}")
+                #        case pygame.K_DOWN:
+                #            camera.y += MOVEMENT_AMOUNT
+                #            position_label.set_text(f"Camera: {camera.x}, {camera.y}")
+                #        case pygame.K_UP:
+                #            camera.y -= MOVEMENT_AMOUNT
+                #            position_label.set_text(f"Camera: {camera.x}, {camera.y}")
                 #case pygame_gui.UI_BUTTON_PRESSED:
                 #    if event.ui_element == True:
                 #        print("back")
@@ -196,6 +198,26 @@ def main():
             
             manager.process_events(event)
         
+        if timerea <= 0:
+            timerea = 1.0 / 60
+            keys = pygame.key.get_pressed()
+
+            
+            if keys[pygame.K_LEFT]:
+                camera.x -= MOVEMENT_AMOUNT
+                position_label.set_text(f"Camera: {camera.x}, {camera.y}")
+            if keys[pygame.K_RIGHT]:
+                camera.x += MOVEMENT_AMOUNT
+                position_label.set_text(f"Camera: {camera.x}, {camera.y}")
+            if keys[pygame.K_DOWN]:
+                camera.y += MOVEMENT_AMOUNT
+                position_label.set_text(f"Camera: {camera.x}, {camera.y}")
+            if keys[pygame.K_UP]:
+                camera.y -= MOVEMENT_AMOUNT
+                position_label.set_text(f"Camera: {camera.x}, {camera.y}")
+        else:
+            timerea -= time_delta
+
         if constants.RUNNING:
             if stutter_double:
                 # MISC

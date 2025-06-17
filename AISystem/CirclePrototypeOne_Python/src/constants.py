@@ -221,7 +221,7 @@ species_types: list[Species] = [
             ("textured", TexturedComponent(4))
         ]))
     ], 1800, 1800, (1.5, 3, 4, 120, -180, 25, 0.01, 1), 10, 0, 0),
-    Species("Vermin", (0, 255, 255), 9, 1.5, 25, 75, 13, 10, 0.25, 0, 0, {NutrientType.PROTEIN: 200}, [
+    Species("Vermin", (0, 255, 255), 9, 1.5, 25, 75, 2.3, 10, 0.25, 0, 0, {NutrientType.PROTEIN: 200}, [
         NutrientStat(NutrientType.PROTEIN, 0.1, 12.0, 0.015, 0.25),
         NutrientStat(NutrientType.VITAMIN, 0.1, 2.0, 0.001, 0.25),
         NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 30.0)

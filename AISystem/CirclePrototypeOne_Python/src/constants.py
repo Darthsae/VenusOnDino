@@ -106,7 +106,7 @@ species_types: list[Species] = [
         ], [
             ("remove_entity", True)
         ])),
-        ("timer", TimerComponent(0, 720, [], [
+        ("timer", TimerComponent(0, 1420, [], [
             ("textured", TexturedComponent(4))
         ]))
     ], 6000, 6000, (1.5, 2, 1, 120, -120, 25, 0.01, 1), 50, 0, 0),
@@ -140,7 +140,7 @@ species_types: list[Species] = [
         ], [
             ("remove_entity", True),
         ])),
-        ("timer", TimerComponent(0, 720, [], [
+        ("timer", TimerComponent(0, 1000, [], [
             ("textured", TexturedComponent(4))
         ]))
     ], 1800, 1800, (1.5, 3, 4, 120, -180, 25, 0.01, 1), 10, 0, 0),
@@ -183,7 +183,7 @@ species_types: list[Species] = [
         ], [
             ("remove_entity", True),
         ])),
-        ("timer", TimerComponent(0, 720, [], [
+        ("timer", TimerComponent(0, 1000, [], [
             ("textured", TexturedComponent(4))
         ]))
     ], 1800, 1800, (1.5, 5, 4, 120, -180, 25, 0.01, 1), 75, 0, 0),
@@ -217,7 +217,7 @@ species_types: list[Species] = [
         ], [
             ("remove_entity", True),
         ])),
-        ("timer", TimerComponent(0, 720, [], [
+        ("timer", TimerComponent(0, 2520, [], [
             ("textured", TexturedComponent(4))
         ]))
     ], 1800, 1800, (1.5, 3, 4, 120, -180, 25, 0.01, 1), 10, 0, 0),

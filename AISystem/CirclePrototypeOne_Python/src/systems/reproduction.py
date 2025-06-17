@@ -33,7 +33,7 @@ def updateReproduction(coordinator: ECSCoordinator, terrain: Terrain):
             success: bool = reproduce_component.others != 1
             id_of_self: int = coordinator.getComponent(entity_id, constants.SPECIES_COMPONENT)
             for _, entity_id_iter in possible:
-                if entity_id_iter in coordinator.entities and coordinator.hasComponent(entity_id_iter, constants.SPECIES_COMPONENT) and id_of_self == coordinator.getComponent(entity_id_iter, constants.SPECIES_COMPONENT):
+                if entity_id_iter in coordinator.entities and coordinator.hasComponent(entity_id_iter, constants.REPRODUCE_COMPONENT) and coordinator.hasComponent(entity_id_iter, constants.SPECIES_COMPONENT) and id_of_self == coordinator.getComponent(entity_id_iter, constants.SPECIES_COMPONENT):
                     other_repo: ReproduceComponent = coordinator.getComponent(entity_id_iter, constants.REPRODUCE_COMPONENT)
                     match reproduce_component.sex:
                         case Sex.MALE:

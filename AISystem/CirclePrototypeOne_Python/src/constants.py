@@ -91,9 +91,9 @@ species_types: list[Species] = [
                 "eat_target"
             ]
         }),
-        EvaluatorInstance(3, {"modifier": 0.000001}),
+        EvaluatorInstance(3, {"modifier": 950000000}),
         EvaluatorInstance(0, {}),
-        EvaluatorInstance(1, {})
+        EvaluatorInstance(1, {"modifier": 0.000002})
     ], [
         ("textured", TexturedComponent(3)),
         ("physical_buzz", ([

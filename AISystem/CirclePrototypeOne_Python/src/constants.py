@@ -187,6 +187,40 @@ species_types: list[Species] = [
             ("textured", TexturedComponent(4))
         ]))
     ], 1800, 1800, (1.5, 5, 4, 120, -180, 25, 0.01, 1), 75, 0, 0),
+    Species("Titan", (0, 255, 255), 8, 15, 90000, 450, 1, 10, 2.5, 0, 0, {NutrientType.PROTEIN: 250}, [
+        NutrientStat(NutrientType.FIBER, 0.1, 259.0, 0.025, 0.25),
+        NutrientStat(NutrientType.WATER, 0.01, 390.0, 0.001, 30.0)
+    ], 10, 0.5, False, [
+        "brain",
+        "sight",
+        "diet",
+        "health",
+        "eat_target",
+        "move_to_target",
+        "remove_health",
+        "energy",
+        "reproduce",
+        "attack_target"
+    ], [
+        EvaluatorInstance(2, {
+            "threat": [
+                "eat_target"
+            ]
+        }),
+        EvaluatorInstance(3, {}),
+        EvaluatorInstance(0, {}),
+        EvaluatorInstance(1, {})
+    ], [
+        ("textured", TexturedComponent(3)),
+        ("physical_buzz", ([
+            "textured"
+        ], [
+            ("remove_entity", True),
+        ])),
+        ("timer", TimerComponent(0, 720, [], [
+            ("textured", TexturedComponent(4))
+        ]))
+    ], 1800, 1800, (1.5, 3, 4, 120, -180, 25, 0.01, 1), 10, 0, 0),
 ]
 
 evaluator_types: list = [

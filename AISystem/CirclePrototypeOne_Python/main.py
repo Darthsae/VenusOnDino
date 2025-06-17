@@ -57,12 +57,13 @@ def main():
     terrain.spoof()
 
     species_amounts = [
-        75, #Goat
+        75,  #Goat
         400, #Plant
         10,  #Tyrants
         45,  #Trumpets
-        75, #Trees
+        75,  #Trees
         25,  #Bladehands
+        15,  #Titans
     ]
     for species_index, species_count in enumerate(species_amounts):
         for _ in range(species_count):
@@ -87,6 +88,7 @@ def main():
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Trumpet.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Tree.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/BladeHand.png"),
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Titan.png"),
     ]
 
     constants.male = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Male.png")

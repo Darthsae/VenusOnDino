@@ -50,6 +50,12 @@ class Terrain:
             position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
             self.entities.insert(position, entity_id)
         
+    def getColumn(self, position: Point2D) -> TileColumn|None:
+        x = position.x // constants.METERS_PER_TILE
+        y = position.y // constants.METERS_PER_TILE
+        if 0 < x < Terrain.TERRAIN_SIZE and 0 < y < Terrain.TERRAIN_SIZE:
+            return self.columns[y][x]
+        return None
 
     def updateDirtyEntityQuadtree(self, coordinator: ECSCoordinator):
         for entity_id in coordinator.getEntitiesWithComponent(constants.DIRTY_POSITION_COMPONENT):

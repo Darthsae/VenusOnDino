@@ -2,6 +2,7 @@ import pygame, pygame_gui, random, io, pstats, cProfile, time
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIPanel, UIHorizontalSlider, UIButton
 from src.world.terrain import Terrain
+from src.world.tile import PhysicalState
 from src.position import Point2D, Point3D
 from src.ecs import ECSCoordinator
 from src.systems.rendering import renderCircles, renderTextures, renderTerrainTextures, renderSight, renderEmoticons, renderBars
@@ -64,13 +65,14 @@ def main():
         75,  #Trees
         25,  #Bladehands
         15,  #Titans
+        40,  #Vermin
     ]
     for species_index, species_count in enumerate(species_amounts):
         for _ in range(species_count):
-            #while True:
-            #    pueblo: Point3D = Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5)
-            #    if terrain.
-            terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), species_index)
+            while True:
+                pueblo: Point3D = Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5)
+                if constants.tile_types[terrain.getColumn(pueblo.asPoint2D()).topLayer().tile_type].state == PhysicalState.SOLID:
+                    terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), species_index)
 
     
     terrain.regenerateEntityQuadtree(coordinator)
@@ -89,6 +91,7 @@ def main():
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Tree.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/BladeHand.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Titan.png"),
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Vermin.png"),
     ]
 
     constants.male = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Male.png")

@@ -66,8 +66,8 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 1200, 1200, (1.5, 0, 1, 60, -160, 25, 0.01, 1), 1, 0, 0),
-    Species("Shrub", (0, 255, 0), 2, 2, 2, 800, 0, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 125}, [], -1, 0, True, [
+    ], 1200, 1200, (1.5, 0, 1, 60, -160, 25, 0.01, 1), 5, 0, 0),
+    Species("Shrub", (0, 255, 0), 2, 2, 2, 800, 0, 0, 0, 0.1, 0.001, {NutrientType.FIBER: 125, NutrientType.VITAMIN: 125}, [], -1, 0, True, [
         "health",
         "size_health",
         "growth",
@@ -221,6 +221,41 @@ species_types: list[Species] = [
             ("textured", TexturedComponent(4))
         ]))
     ], 1800, 1800, (1.5, 3, 4, 120, -180, 25, 0.01, 1), 10, 0, 0),
+    Species("Vermin", (0, 255, 255), 9, 1.5, 25, 75, 13, 10, 0.25, 0, 0, {NutrientType.PROTEIN: 200}, [
+        NutrientStat(NutrientType.PROTEIN, 0.1, 12.0, 0.015, 0.25),
+        NutrientStat(NutrientType.VITAMIN, 0.1, 2.0, 0.001, 0.25),
+        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 30.0)
+    ], 10, 0.1, False, [
+        "brain",
+        "sight",
+        "diet",
+        "health",
+        "eat_target",
+        "move_to_target",
+        "remove_health",
+        "energy",
+        "reproduce",
+        "attack_target"
+    ], [
+        EvaluatorInstance(2, {
+            "threat": [
+                "eat_target"
+            ]
+        }),
+        EvaluatorInstance(3, {"modifier": 350000000}),
+        EvaluatorInstance(0, {"modifier": 350000000}),
+        EvaluatorInstance(1, {})
+    ], [
+        ("textured", TexturedComponent(3)),
+        ("physical_buzz", ([
+            "textured"
+        ], [
+            ("remove_entity", True),
+        ])),
+        ("timer", TimerComponent(0, 720, [], [
+            ("textured", TexturedComponent(4))
+        ]))
+    ], 1200, 1200, (1.5, 0, 1, 60, -160, 25, 0.01, 1), 2, 0, 0),
 ]
 
 evaluator_types: list = [

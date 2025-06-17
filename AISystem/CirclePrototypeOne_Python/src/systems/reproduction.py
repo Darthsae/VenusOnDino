@@ -5,6 +5,7 @@ from ..components.energy_component import EnergyComponent
 from ..components.reproduce_component import ReproduceComponent, Sex
 from ..components.physical_body import PhysicalBody
 from ..components.brain_component import BrainComponent, CreatureState
+from ..world.tile import PhysicalState
 from .. import constants
 import random
 
@@ -26,6 +27,7 @@ def updateReproduction(coordinator: ECSCoordinator, terrain: Terrain):
 
         mod = 1.0
         position: Point3D = coordinator.getComponent(entity_id, constants.POSITION_COMPONENT)
+        
         if reproduce_component.others != 0:
             physical_body: PhysicalBody = coordinator.getComponent(entity_id, constants.PHYSICAL_BODY_COMPONENT)
             view_size: Point3D = Point3D.fromUniform(physical_body.size * 2)
@@ -64,5 +66,13 @@ def updateReproduction(coordinator: ECSCoordinator, terrain: Terrain):
             if count == 0: 
                 continue
             for _ in range(count):
-                pos: Point3D = position + Point3D(random.uniform(-reproduce_component.offset, reproduce_component.offset), random.uniform(-reproduce_component.offset, reproduce_component.offset), 0)
-                coordinator.setComponent(terrain.addEntity(coordinator, pos, reproduce_component.species), constants.DIRTY_POSITION_COMPONENT, pos)
+                integro = 0
+                while True:
+                    pos: Point3D = position + Point3D(random.uniform(-reproduce_component.offset, reproduce_component.offset), random.uniform(-reproduce_component.offset, reproduce_component.offset), 0)
+                    integro += 1
+                    if constants.tile_types[terrain.getColumn(pos.asPoint2D()).topLayer().tile_type].state == PhysicalState.SOLID:
+                        coordinator.setComponent(terrain.addEntity(coordinator, pos, reproduce_component.species), constants.DIRTY_POSITION_COMPONENT, pos)
+                        break
+                    elif integro > 100:
+                        break
+                    

@@ -42,9 +42,9 @@ class OctreeNode[T]:
             return to_return
     
     def insert(self, position: Point3D, data: T):
-        position.x = round(position.x, 2)
-        position.y = round(position.y, 2)
-        position.z = round(position.z, 2)
+        #position.x = round(position.x, 2)
+        #position.y = round(position.y, 2)
+        #position.z = round(position.z, 2)
         if not (self.lower.x <= position.x <= self.upper.x and
                 self.lower.y <= position.y <= self.upper.y and
                 self.lower.z <= position.z <= self.upper.z):
@@ -52,7 +52,7 @@ class OctreeNode[T]:
         elif self.children[0] == None:
             self.occupants[position] = data
             if len(self.occupants) == OctreeNode.MAX_OCCUPANTS and self.depth < OctreeNode.MAX_DEPTH:
-                new_half = self.half_size // 2
+                new_half = self.half_size // 2 + 1
                 for i in range(8):
                     node_position: Point3D = Point3D(self.position.x, self.position.y, self.position.z) + OctreeNode.MAPPED[i] * new_half
                     self.children[i] = OctreeNode[T](node_position, new_half, self.depth + 1)
@@ -70,9 +70,9 @@ class OctreeNode[T]:
             self.children[x + y * 2 + z * 4].insert(position, data)
     
     def pop(self, position: Point3D) -> bool:
-        position.x = round(position.x, 2)
-        position.y = round(position.y, 2)
-        position.z = round(position.z, 2)
+        #position.x = round(position.x, 2)
+        #position.y = round(position.y, 2)
+        #position.z = round(position.z, 2)
         if not (self.lower.x <= position.x <= self.upper.x and
                 self.lower.y <= position.y <= self.upper.y and
                 self.lower.z <= position.z <= self.upper.z):

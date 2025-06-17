@@ -187,10 +187,10 @@ species_types: list[Species] = [
             ("textured", TexturedComponent(4))
         ]))
     ], 1800, 1800, (1.5, 5, 4, 120, -180, 25, 0.01, 1), 75, 0, 0),
-    Species("Titan", (0, 255, 255), 8, 15, 90000, 450, 1, 10, 2.5, 0, 0, {NutrientType.PROTEIN: 250}, [
+    Species("Titan", (0, 255, 255), 8, 15, 90000, 1450, 1, 10, 2.5, 0, 0, {NutrientType.PROTEIN: 250}, [
         NutrientStat(NutrientType.FIBER, 0.1, 259.0, 0.025, 0.25),
         NutrientStat(NutrientType.WATER, 0.01, 390.0, 0.001, 30.0)
-    ], 10, 2.5, False, [
+    ], 200, 2.5, False, [
         "brain",
         "sight",
         "diet",

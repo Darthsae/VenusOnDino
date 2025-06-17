@@ -15,7 +15,7 @@ from ..components.nutrient_source import NutrientSource
 from ..components.growth_component import GrowthComponent
 from ..components.eat_target_component import EatTargetComponent
 from ..components.energy_component import EnergyComponent
-from ..components.reproduce_component import ReproduceComponent
+from ..components.reproduce_component import ReproduceComponent, Sex
 from ..components.attack_target_component import AttackTargetComponent
 from .. import constants
 import random, opensimplex, numpy
@@ -105,6 +105,9 @@ class Terrain:
             coordinator.setComponent(new_entity, constants.ENERGY_COMPONENT, EnergyComponent(constants.species_types[species].energy, constants.species_types[species].energy_max))
         if constants.species_types[species].reproduction != None:
             reproduction_data = constants.species_types[species].reproduction
+            a: Sex = Sex.OTHER
+            if constants.species_types[species].typing == 1:
+                a = Sex.FEMALE if random.random > 0.5 else Sex.MALE
             coordinator.setComponent(new_entity, constants.REPRODUCE_COMPONENT, ReproduceComponent(reproduction_data[0], reproduction_data[1], reproduction_data[2], reproduction_data[3], reproduction_data[4], reproduction_data[5], reproduction_data[6], reproduction_data[7]))
         if constants.species_types[species].damage > 0:
             coordinator.setComponent(new_entity, constants.ATTACK_TARGET_COMPONENT, AttackTargetComponent(constants.species_types[species].damage))

@@ -183,7 +183,7 @@ def main():
                 case pygame.QUIT:
                     running = False
                 case pygame.MOUSEWHEEL:
-                    zoom_slider.set_current_value(min(max(1, zoom_slider.get_current_value + event.y), 32))    
+                    zoom_slider.set_current_value(min(max(1, zoom_slider.get_current_value() + event.y), 32))    
                     constants.PIXELS_PER_METER = zoom_slider.get_current_value()
                     constants.PIXELS_PER_TILE = constants.PIXELS_PER_METER * constants.METERS_PER_TILE
                 case pygame.KEYDOWN:

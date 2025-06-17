@@ -144,6 +144,49 @@ species_types: list[Species] = [
             ("textured", TexturedComponent(4))
         ]))
     ], 1800, 1800, (1.5, 3, 4, 120, -180, 25, 0.01, 1), 10, 0, 0),
+    Species("Tree", (0, 255, 0), 6, 3.5, 2, 2600, 0, 0, 0, 0.5, 0.001, {NutrientType.FIBER: 250}, [], -1, 0, True, [
+        "health",
+        "size_health",
+        "growth",
+        "remove_health",
+        "reproduce"
+    ], [], [
+        ("remove_entity", True)
+    ], 0, 0, (12.5, 4, 1, 60, -260, 0, 0.045, -1), 0, 0.0025, 1),
+    Species("Bladehands", (0, 255, 255), 7, 1.5, 300, 550, 1, 10, 0.25, 0, 0, {NutrientType.PROTEIN: 250}, [
+        NutrientStat(NutrientType.FIBER, 0.1, 25.0, 0.025, 0.25),
+        NutrientStat(NutrientType.WATER, 0.01, 30.0, 0.001, 30.0)
+    ], 10, 0.5, False, [
+        "brain",
+        "sight",
+        "diet",
+        "health",
+        "eat_target",
+        "move_to_target",
+        "remove_health",
+        "energy",
+        "reproduce",
+        "attack_target"
+    ], [
+        EvaluatorInstance(2, {
+            "threat": [
+                "eat_target"
+            ]
+        }),
+        EvaluatorInstance(3, {}),
+        EvaluatorInstance(0, {}),
+        EvaluatorInstance(1, {})
+    ], [
+        ("textured", TexturedComponent(3)),
+        ("physical_buzz", ([
+            "textured"
+        ], [
+            ("remove_entity", True),
+        ])),
+        ("timer", TimerComponent(0, 720, [], [
+            ("textured", TexturedComponent(4))
+        ]))
+    ], 1800, 1800, (1.5, 5, 4, 120, -180, 25, 0.01, 1), 75, 0, 0),
 ]
 
 evaluator_types: list = [

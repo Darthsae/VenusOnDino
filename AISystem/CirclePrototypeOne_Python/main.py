@@ -83,6 +83,8 @@ def main():
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Meat.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/RottenMeat.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Trumpet.png"),
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Tree.png"),
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/BladeHand.png"),
     ]
 
     constants.male = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Male.png")

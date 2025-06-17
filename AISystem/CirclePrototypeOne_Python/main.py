@@ -107,6 +107,8 @@ def main():
     constants.boot_coprolite = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Roaming.png")
     constants.warfare = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Attacking.png")
 
+    menu: bool = False
+
     def swapCircles():
         constants.DRAW_CIRCLES = not constants.DRAW_CIRCLES
 
@@ -150,6 +152,14 @@ def main():
     fps_slider_label = UILabel(pygame.Rect(3, 211, 116, 26), f"FPS Cap: {constants.FPS}", manager, panel.get_container())
     fps_slider = UIHorizontalSlider(pygame.Rect(3, 237, 116, 26), constants.FPS, (10, 600), manager, panel.get_container())
     zoom_slider = UIHorizontalSlider(pygame.Rect(3, 263, 116, 26), constants.PIXELS_PER_METER, (1, 32), manager, panel.get_container())
+    panel.hide()
+    def swapMenu():
+        global menu, panel
+        menu = not menu
+        if menu:
+            panel.show()
+        else:
+            panel.hide()
 
     running: bool = True
 
@@ -175,6 +185,8 @@ def main():
                     match event.key:
                         case pygame.K_SPACE:
                             swapPause()
+                        case pygame.K_ESCAPE:
+                            swapMenu()
                 #        case pygame.K_LEFT:
                 #            camera.x -= MOVEMENT_AMOUNT
                 #            position_label.set_text(f"Camera: {camera.x}, {camera.y}")
@@ -204,23 +216,23 @@ def main():
             timerea = 1.0 / 60
             keys = pygame.key.get_pressed()
 
-            
-            if keys[pygame.K_LEFT]:
-                camera.x -= MOVEMENT_AMOUNT
-                position_label.set_text(f"Camera: {camera.x}, {camera.y}")
-            if keys[pygame.K_RIGHT]:
-                camera.x += MOVEMENT_AMOUNT
-                position_label.set_text(f"Camera: {camera.x}, {camera.y}")
-            if keys[pygame.K_DOWN]:
-                camera.y += MOVEMENT_AMOUNT
-                position_label.set_text(f"Camera: {camera.x}, {camera.y}")
-            if keys[pygame.K_UP]:
-                camera.y -= MOVEMENT_AMOUNT
-                position_label.set_text(f"Camera: {camera.x}, {camera.y}")
+            if not menu:
+                if keys[pygame.K_LEFT]:
+                    camera.x -= MOVEMENT_AMOUNT
+                    position_label.set_text(f"Camera: {camera.x}, {camera.y}")
+                if keys[pygame.K_RIGHT]:
+                    camera.x += MOVEMENT_AMOUNT
+                    position_label.set_text(f"Camera: {camera.x}, {camera.y}")
+                if keys[pygame.K_DOWN]:
+                    camera.y += MOVEMENT_AMOUNT
+                    position_label.set_text(f"Camera: {camera.x}, {camera.y}")
+                if keys[pygame.K_UP]:
+                    camera.y -= MOVEMENT_AMOUNT
+                    position_label.set_text(f"Camera: {camera.x}, {camera.y}")
         else:
             timerea -= time_delta
 
-        if constants.RUNNING:
+        if constants.RUNNING and not menu:
             if stutter_double:
                 # MISC
                 updateNutrients(coordinator)

@@ -71,7 +71,7 @@ class Terrain:
     def spoof(self):
         for y in range(Terrain.TERRAIN_SIZE):
             for x in range(Terrain.TERRAIN_SIZE):
-                self.columns[y][x].layers = [ColumnLayerData(1 if (opensimplex.noise2(x * 0.07, y * 0.07) - 0.25 * opensimplex.noise2(25 + y * 0.15, 25 + x * 0.15)) > 0.15 else 0, 0)]
+                self.columns[y][x].layers = [ColumnLayerData(1 if (opensimplex.noise2(x * 0.07, y * 0.07) - 0.25 * opensimplex.noise2(25 + y * 0.15, 25 + x * 0.15)) > 0.125 else 0, 0)]
 
     def addEntity(self, coordinator: ECSCoordinator, position: Point3D, species: int) -> entity:
         new_entity = coordinator.createEntity()

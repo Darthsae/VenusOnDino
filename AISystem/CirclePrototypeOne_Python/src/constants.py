@@ -256,7 +256,7 @@ species_types: list[Species] = [
             ("textured", TexturedComponent(4))
         ]))
     ], 1200, 1200, (1.5, 0, 1, 60, -160, 25, 0.01, 1), 10, 0, 0),
-    Species("Berry Bush", (0, 255, 0), 2, 2, 2, 800, 0, 0, 0, 0.1, 0.001, {NutrientType.VITAMIN: 250}, [], -1, 0, True, [
+    Species("Berry Bush", (0, 255, 0), 10, 2, 2, 800, 0, 0, 0, 0.1, 0.001, {NutrientType.VITAMIN: 250}, [], -1, 0, True, [
         "health",
         "size_health",
         "growth",

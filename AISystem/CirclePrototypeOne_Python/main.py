@@ -59,8 +59,10 @@ def main():
     species_amounts = [
         150, #Goat
         800, #Plant
-        10, #Tyrants
-        75 #Trumpets
+        10,  #Tyrants
+        75,  #Trumpets
+        150, #Trees
+        50,  #Bladehands
     ]
     for species_index, species_count in enumerate(species_amounts):
         for _ in range(species_count):

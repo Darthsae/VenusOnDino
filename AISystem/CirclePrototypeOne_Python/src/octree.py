@@ -14,7 +14,7 @@ class OctreeNode[T]:
         Point3D( 1,  1,  1),
     ]
 
-    def __init__(self, position: Point3D, half_size: int, depth: int = 0):
+    def __init__(self, position: Point3D, half_size: float, depth: int = 0):
         self.children: list[OctreeNode|None] = [None for _ in range(8)]
         self.occupants: dict[Point3D, T] = {}
         self.position = position
@@ -52,7 +52,7 @@ class OctreeNode[T]:
         elif self.children[0] == None:
             self.occupants[position] = data
             if len(self.occupants) == OctreeNode.MAX_OCCUPANTS and self.depth < OctreeNode.MAX_DEPTH:
-                new_half = self.half_size // 2 + 1
+                new_half = self.half_size / 2
                 for i in range(8):
                     node_position: Point3D = Point3D(self.position.x, self.position.y, self.position.z) + OctreeNode.MAPPED[i] * new_half
                     self.children[i] = OctreeNode[T](node_position, new_half, self.depth + 1)

@@ -84,9 +84,9 @@ class Terrain:
         for y in range(Terrain.TERRAIN_SIZE):
             for x in range(Terrain.TERRAIN_SIZE):
                 # The thing after the > ranges from -1 to 1.
-                # Anything above that value is dirt.
-                # Anything below that value is water.
-                self.columns[y][x].layers = [ColumnLayerData(1 if (opensimplex.noise2(x * 0.07, y * 0.07) - 0.25 * opensimplex.noise2(25 + y * 0.15, 25 + x * 0.15)) > 0.025 else 0, 0)]
+                # Anything above that value is water.
+                # Anything below that value is dirt.
+                self.columns[y][x].layers = [ColumnLayerData(1 if (opensimplex.noise2(x * 0.07, y * 0.07) - 0.25 * opensimplex.noise2(25 + y * 0.15, 25 + x * 0.15)) > 0.145 else 0, 0)]
 
     def addEntity(self, coordinator: ECSCoordinator, position: Point3D, species: int) -> entity:
         new_entity = coordinator.createEntity()

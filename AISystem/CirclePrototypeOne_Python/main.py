@@ -63,7 +63,7 @@ def main():
         10,  #Tyrants
         45,  #Trumpets
         75,  #Trees
-        25,  #Bladehands
+        15,  #Bladehands
         5,   #Titans
         40,  #Vermin
         75,  #Berry Bushes

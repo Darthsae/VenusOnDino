@@ -106,7 +106,7 @@ class Terrain:
         if constants.species_types[species].reproduction != None:
             reproduction_data = constants.species_types[species].reproduction
             a: Sex = Sex.OTHER
-            if constants.species_types[species].typing == 1:
+            if constants.species_types[species].typing == 0:
                 a = Sex.FEMALE if random.random() > 0.5 else Sex.MALE
             coordinator.setComponent(new_entity, constants.REPRODUCE_COMPONENT, ReproduceComponent(a, reproduction_data[0], reproduction_data[1], reproduction_data[2], reproduction_data[3], reproduction_data[4], reproduction_data[5], reproduction_data[6], reproduction_data[7]))
         if constants.species_types[species].damage > 0:

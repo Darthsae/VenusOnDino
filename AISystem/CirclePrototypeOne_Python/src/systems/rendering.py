@@ -133,7 +133,7 @@ def renderBars(coordinator: ECSCoordinator, surface: Surface, camera: Point3D, e
             emoticon_texture: Surface = pygame.transform.scale_by(emoticon_texture_data.texture, constants.PIXELS_PER_METER / max(emoticon_texture_data.rect.width, emoticon_texture_data.rect.height) * 1.0)
             
             emoticon_rect = emoticon_texture.get_rect()
-            emoticon_rect.center = (new_position.x + constants.PIXELS_PER_METER, new_position.y - constants.PIXELS_PER_METER * 0.75)
+            emoticon_rect.center = (new_position.x + constants.PIXELS_PER_METER, new_position.y + constants.PIXELS_PER_METER)
             surface.blit(emoticon_texture, emoticon_rect)
             
         if coordinator.hasComponent(entity, constants.DIET_COMPONENT) or coordinator.hasComponent(entity, constants.ENERGY_COMPONENT) or coordinator.hasComponent(entity, constants.HEALTH_COMPONENT):

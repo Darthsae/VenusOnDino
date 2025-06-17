@@ -51,8 +51,8 @@ class Terrain:
             self.entities.insert(position, entity_id)
         
     def getColumn(self, position: Point2D) -> TileColumn|None:
-        x = position.x // constants.METERS_PER_TILE
-        y = position.y // constants.METERS_PER_TILE
+        x = int(position.x // constants.METERS_PER_TILE)
+        y = int(position.y // constants.METERS_PER_TILE)
         if 0 < x < Terrain.TERRAIN_SIZE and 0 < y < Terrain.TERRAIN_SIZE:
             return self.columns[y][x]
         return None

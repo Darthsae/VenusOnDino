@@ -244,7 +244,7 @@ species_types: list[Species] = [
         }),
         EvaluatorInstance(3, {"modifier": 350000000}),
         EvaluatorInstance(0, {"modifier": 350000000}),
-        EvaluatorInstance(1, {})
+        EvaluatorInstance(1, {"modifier": 0.000005})
     ], [
         ("textured", TexturedComponent(3)),
         ("physical_buzz", ([
@@ -255,7 +255,16 @@ species_types: list[Species] = [
         ("timer", TimerComponent(0, 720, [], [
             ("textured", TexturedComponent(4))
         ]))
-    ], 1200, 1200, (1.5, 0, 1, 60, -160, 25, 0.01, 1), 2, 0, 0),
+    ], 1200, 1200, (1.5, 0, 1, 60, -160, 25, 0.01, 1), 10, 0, 0),
+    Species("Berry Bush", (0, 255, 0), 2, 2, 2, 800, 0, 0, 0, 0.1, 0.001, {NutrientType.VITAMIN: 250}, [], -1, 0, True, [
+        "health",
+        "size_health",
+        "growth",
+        "remove_health",
+        "reproduce"
+    ], [], [
+        ("remove_entity", True)
+    ], 0, 0, (12.5, 1, 1, 60, -160, 0, 0.045, -1), 0, 0.0001, 1),
 ]
 
 evaluator_types: list = [

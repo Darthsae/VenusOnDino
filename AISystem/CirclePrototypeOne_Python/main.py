@@ -64,8 +64,9 @@ def main():
         45,  #Trumpets
         75,  #Trees
         25,  #Bladehands
-        15,  #Titans
+        5,   #Titans
         40,  #Vermin
+        75,  #Berry Bushes
     ]
     for species_index, species_count in enumerate(species_amounts):
         for _ in range(species_count):

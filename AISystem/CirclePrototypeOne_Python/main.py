@@ -73,7 +73,7 @@ def main():
             while True:
                 pueblo: Point3D = Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5)
                 if terrain.isColumnState(pueblo.asPoint2D(), PhysicalState.SOLID):
-                    terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), species_index)
+                    terrain.addEntity(coordinator, pueblo, species_index)
                     break
 
     
@@ -94,6 +94,7 @@ def main():
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/BladeHand.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Titan.png"),
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Vermin.png"),
+        TextureData.load("../../Assets/Textures/PixelArt/TopDown/Berrybush.png"),
     ]
 
     constants.male = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Male.png")

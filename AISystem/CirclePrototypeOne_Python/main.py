@@ -220,16 +220,16 @@ def main():
             keys = pygame.key.get_pressed()
 
             if not menu:
-                if keys[pygame.K_LEFT]:
+                if keys[pygame.K_a] or keys[pygame.K_LEFT]:
                     camera.x -= MOVEMENT_AMOUNT
                     position_label.set_text(f"Camera: {camera.x}, {camera.y}")
-                if keys[pygame.K_RIGHT]:
+                if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
                     camera.x += MOVEMENT_AMOUNT
                     position_label.set_text(f"Camera: {camera.x}, {camera.y}")
-                if keys[pygame.K_DOWN]:
+                if keys[pygame.K_s] or keys[pygame.K_DOWN]:
                     camera.y += MOVEMENT_AMOUNT
                     position_label.set_text(f"Camera: {camera.x}, {camera.y}")
-                if keys[pygame.K_UP]:
+                if keys[pygame.K_w] or keys[pygame.K_UP]:
                     camera.y -= MOVEMENT_AMOUNT
                     position_label.set_text(f"Camera: {camera.x}, {camera.y}")
         else:

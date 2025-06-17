@@ -57,12 +57,12 @@ def main():
     terrain.spoof()
 
     species_amounts = [
-        150, #Goat
-        800, #Plant
+        75, #Goat
+        400, #Plant
         10,  #Tyrants
-        75,  #Trumpets
-        150, #Trees
-        50,  #Bladehands
+        45,  #Trumpets
+        75, #Trees
+        25,  #Bladehands
     ]
     for species_index, species_count in enumerate(species_amounts):
         for _ in range(species_count):

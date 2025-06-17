@@ -108,7 +108,7 @@ def main():
     constants.boot_coprolite = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Roaming.png")
     constants.warfare = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Attacking.png")
 
-    menu: bool = False
+    menu = False
 
     def swapCircles():
         constants.DRAW_CIRCLES = not constants.DRAW_CIRCLES
@@ -182,6 +182,8 @@ def main():
             match event.type:
                 case pygame.QUIT:
                     running = False
+                #case pygame.MOUSEWHEEL:
+                    
                 case pygame.KEYDOWN:
                     match event.key:
                         case pygame.K_SPACE:

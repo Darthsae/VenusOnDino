@@ -21,6 +21,7 @@ from src.texture_data import TextureData
 MOVEMENT_AMOUNT: int = 1
 
 def main():
+    global menu, panel
     camera: Point3D = Point3D(0, 0, 0)
     viewport: Point2D = Point2D(800, 600)
     coordinator: ECSCoordinator = ECSCoordinator()

@@ -171,8 +171,10 @@ def main():
             match event.type:
                 case pygame.QUIT:
                     running = False
-                #case pygame.KEYDOWN:
-                #    match event.key:
+                case pygame.KEYDOWN:
+                    match event.key:
+                        case pygame.K_SPACE:
+                            swapPause()
                 #        case pygame.K_LEFT:
                 #            camera.x -= MOVEMENT_AMOUNT
                 #            position_label.set_text(f"Camera: {camera.x}, {camera.y}")

@@ -10,6 +10,7 @@ from ..components.textured_component import TexturedComponent
 from ..components.diet_component import DietComponent, NutrientType
 from ..components.health_component import HealthComponent
 from ..components.energy_component import EnergyComponent
+from ..components.reproduce_component import ReproduceComponent, Sex
 from ..texture_data import TextureData
 import pygame, math
 
@@ -117,6 +118,24 @@ def renderBar(surface: Surface, bar: Rect, percent: float, color):
 
 def renderBars(coordinator: ECSCoordinator, surface: Surface, camera: Point3D, entities: set[tuple[Point3D, entity]]):
     for position, entity in (entities):
+        if coordinator.hasComponent(entity, constants.REPRODUCE_COMPONENT):
+            repora: ReproduceComponent = coordinator.getComponent(entity, constants.REPRODUCE_COMPONENT)
+            new_position = (position.asPoint2D() - camera) * constants.PIXELS_PER_METER
+
+            match repora.sex:
+                case Sex.MALE:
+                    emoticon_texture_data: TextureData = constants.male
+                case Sex.FEMALE:
+                    emoticon_texture_data: TextureData = constants.female
+                case Sex.OTHER:
+                    emoticon_texture_data: TextureData = constants.jungle
+                    
+            emoticon_texture: Surface = pygame.transform.scale_by(emoticon_texture_data.texture, constants.PIXELS_PER_METER / max(emoticon_texture_data.rect.width, emoticon_texture_data.rect.height) * 4.0)
+            
+            emoticon_rect = emoticon_texture.get_rect()
+            emoticon_rect.center = (new_position.x + constants.PIXELS_PER_METER * 0.5, new_position.y - constants.PIXELS_PER_METER * 0.75)
+            surface.blit(emoticon_texture, emoticon_rect)
+            
         if coordinator.hasComponent(entity, constants.DIET_COMPONENT) or coordinator.hasComponent(entity, constants.ENERGY_COMPONENT) or coordinator.hasComponent(entity, constants.HEALTH_COMPONENT):
             new_position = (position.asPoint2D()  - camera) * constants.PIXELS_PER_METER
             rect: Rect = Rect((0, 0), (1.5 * constants.PIXELS_PER_METER, 0.25 * constants.PIXELS_PER_METER))

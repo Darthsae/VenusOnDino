@@ -85,6 +85,10 @@ def main():
         TextureData.load("../../Assets/Textures/PixelArt/TopDown/Trumpet.png"),
     ]
 
+    constants.male = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Male.png")
+    constants.female = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Female.png")
+    constants.jungle = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Rawpower.png")
+
     constants.sleepy = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Sleeping.png")
     constants.nom_nom = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Eat.png")
     constants.thirst_trap = TextureData.load("../../Assets/Textures/PixelArt/Emotes/Drink.png")

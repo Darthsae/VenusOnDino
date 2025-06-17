@@ -2,7 +2,7 @@ from ..ecs import ECSCoordinator, entity
 from ..world.terrain import Terrain
 from ..position import Point3D
 from ..components.energy_component import EnergyComponent
-from ..components.reproduce_component import ReproduceComponent
+from ..components.reproduce_component import ReproduceComponent, Sex
 from ..components.physical_body import PhysicalBody
 from ..components.brain_component import BrainComponent, CreatureState
 from .. import constants
@@ -34,6 +34,17 @@ def updateReproduction(coordinator: ECSCoordinator, terrain: Terrain):
             id_of_self: int = coordinator.getComponent(entity_id, constants.SPECIES_COMPONENT)
             for _, entity_id_iter in possible:
                 if entity_id_iter in coordinator.entities and coordinator.hasComponent(entity_id_iter, constants.SPECIES_COMPONENT) and id_of_self == coordinator.getComponent(entity_id_iter, constants.SPECIES_COMPONENT):
+                    other_repo: ReproduceComponent = coordinator.getComponent(entity_id_iter, constants.REPRODUCE_COMPONENT)
+                    match reproduce_component.sex:
+                        case Sex.MALE:
+                            if other_repo.sex != Sex.FEMALE:
+                                continue
+                        case Sex.FEMALE:
+                            if other_repo.sex != Sex.MALE:
+                                continue
+                        case Sex.OTHER:
+                            if other_repo.sex != Sex.OTHER:
+                                continue
                     if reproduce_component.others == 1:
                         success = True
                         break

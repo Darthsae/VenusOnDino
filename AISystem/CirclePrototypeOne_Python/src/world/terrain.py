@@ -21,7 +21,7 @@ from .. import constants
 import random, opensimplex, numpy
 
 class Terrain:
-    TERRAIN_SIZE: int = 150
+    TERRAIN_SIZE: int = 100
     TERRAIN_HALF_SIZE: int = TERRAIN_SIZE // 2
 
     def __init__(self, position: Point2D):

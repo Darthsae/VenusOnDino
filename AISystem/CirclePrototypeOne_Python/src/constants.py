@@ -190,7 +190,7 @@ species_types: list[Species] = [
     Species("Titan", (0, 255, 255), 8, 15, 90000, 450, 1, 10, 2.5, 0, 0, {NutrientType.PROTEIN: 250}, [
         NutrientStat(NutrientType.FIBER, 0.1, 259.0, 0.025, 0.25),
         NutrientStat(NutrientType.WATER, 0.01, 390.0, 0.001, 30.0)
-    ], 10, 0.5, False, [
+    ], 10, 2.5, False, [
         "brain",
         "sight",
         "diet",

@@ -73,6 +73,7 @@ def main():
                 pueblo: Point3D = Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5)
                 if terrain.isColumnState(pueblo.asPoint2D(), PhysicalState.SOLID):
                     terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), species_index)
+                    break
 
     
     terrain.regenerateEntityQuadtree(coordinator)

@@ -64,6 +64,9 @@ def main():
     ]
     for species_index, species_count in enumerate(species_amounts):
         for _ in range(species_count):
+            #while True:
+            #    pueblo: Point3D = Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5)
+            #    if terrain.
             terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), species_index)
 
     

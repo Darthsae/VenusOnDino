@@ -42,7 +42,7 @@ class Terrain:
                     tile_entity = coordinator.createEntity()
                     for component_type, component_data in tile_components:
                         coordinator.setComponent(tile_entity, constants.componentPull(component_type), component_data)
-                    coordinator.setComponent(tile_entity, constants.POSITION_COMPONENT, Point3D((x + 0.5) * constants.METERS_PER_TILE, (y + 0.5) * constants.METERS_PER_TILE, 2))
+                    coordinator.setComponent(tile_entity, constants.POSITION_COMPONENT, Point3D((x + 0.5) * constants.METERS_PER_TILE, (y + 0.5) * constants.METERS_PER_TILE, 2.5))
                     coordinator.setComponent(tile_entity, constants.PHYSICAL_BODY_COMPONENT, PhysicalBody(100, constants.METERS_PER_TILE / 2))
                     #self.tiles.insert(Point3D((x + 0.5) * constants.METERS_PER_TILE, (y + 0.5) * constants.METERS_PER_TILE, 2), tile_entity)
         

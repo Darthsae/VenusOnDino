@@ -42,6 +42,9 @@ class OctreeNode[T]:
             return to_return
     
     def insert(self, position: Point3D, data: T):
+        position.x = round(position.x, 2)
+        position.y = round(position.y, 2)
+        position.z = round(position.z, 2)
         if not (self.lower.x <= position.x <= self.upper.x and
                 self.lower.y <= position.y <= self.upper.y and
                 self.lower.z <= position.z <= self.upper.z):
@@ -67,6 +70,9 @@ class OctreeNode[T]:
             self.children[x + y * 2 + z * 4].insert(position, data)
     
     def pop(self, position: Point3D) -> bool:
+        position.x = round(position.x, 2)
+        position.y = round(position.y, 2)
+        position.z = round(position.z, 2)
         if not (self.lower.x <= position.x <= self.upper.x and
                 self.lower.y <= position.y <= self.upper.y and
                 self.lower.z <= position.z <= self.upper.z):

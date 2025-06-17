@@ -1,4 +1,4 @@
-from .tile import ColumnLayerData
+from .tile import ColumnLayerData, PhysicalState
 from .tile_column import TileColumn
 from ..octree import OctreeNode, Point3D
 from ..quad_struct import QuadStruct, Point2D
@@ -56,6 +56,12 @@ class Terrain:
         if 0 < x < Terrain.TERRAIN_SIZE and 0 < y < Terrain.TERRAIN_SIZE:
             return self.columns[y][x]
         return None
+    
+    def isColumnState(self, position: Point2D, state: PhysicalState, default: bool = False) -> bool:
+        ap = self.getColumn(position)
+        if ap != None:
+            return constants.tile_types[ap.topLayer().tile_type].state == state
+        return default
 
     def updateDirtyEntityQuadtree(self, coordinator: ECSCoordinator):
         for entity_id in coordinator.getEntitiesWithComponent(constants.DIRTY_POSITION_COMPONENT):

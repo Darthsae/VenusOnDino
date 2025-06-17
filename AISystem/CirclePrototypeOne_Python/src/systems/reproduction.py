@@ -70,7 +70,7 @@ def updateReproduction(coordinator: ECSCoordinator, terrain: Terrain):
                 while True:
                     pos: Point3D = position + Point3D(random.uniform(-reproduce_component.offset, reproduce_component.offset), random.uniform(-reproduce_component.offset, reproduce_component.offset), 0)
                     integro += 1
-                    if constants.tile_types[terrain.getColumn(pos.asPoint2D()).topLayer().tile_type].state == PhysicalState.SOLID:
+                    if terrain.isColumnState(pos.asPoint2D(), PhysicalState.SOLID):
                         coordinator.setComponent(terrain.addEntity(coordinator, pos, reproduce_component.species), constants.DIRTY_POSITION_COMPONENT, pos)
                         break
                     elif integro > 100:

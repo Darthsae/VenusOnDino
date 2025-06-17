@@ -71,7 +71,7 @@ def main():
         for _ in range(species_count):
             while True:
                 pueblo: Point3D = Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5)
-                if constants.tile_types[terrain.getColumn(pueblo.asPoint2D()).topLayer().tile_type].state == PhysicalState.SOLID:
+                if terrain.isColumnState(pueblo.asPoint2D(), PhysicalState.SOLID):
                     terrain.addEntity(coordinator, Point3D(random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), random.randint(0, Terrain.TERRAIN_SIZE * constants.METERS_PER_TILE), 5), species_index)
 
     
